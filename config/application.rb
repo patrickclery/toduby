@@ -19,7 +19,7 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module DryRailsReact
+module Toduby
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
@@ -29,7 +29,7 @@ module DryRailsReact
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    config.react.server_renderer_pool_size  ||= 1  # ExecJS doesn't allow more than one on MRI
+    config.react.server_renderer_pool_size  ||= 1 # ExecJS doesn't allow more than one on MRI
     config.react.server_renderer_timeout    ||= 20 # seconds
     config.react.server_renderer = React::ServerRendering::BundleRenderer
     config.react.server_renderer_options = {
