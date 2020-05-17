@@ -5,11 +5,11 @@ default: &default
 
 development:
   <<: *default
-  database: dry_rails_react_development
+  database: todo_app_development
 
 test:
   <<: *default
-  database: dry_rails_react_test
+  database: todo_app_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -32,6 +32,6 @@ test:
 #
 production:
   <<: *default
-  database: dry_rails_react_production
-  username: dry_rails_react
+  database: todo_app_production
+  username: todo_app
   password: <%= ENV['POSTGRES_PRODUCTION_PASSWORD'] %>
