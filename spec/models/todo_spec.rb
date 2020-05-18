@@ -14,4 +14,18 @@ RSpec.describe Todo, type: :model do
   context "validations" do
     it { should validate_presence_of(:description) }
   end
+
+  describe "#completed=" do
+    # Freeze time
+    before do
+      travel_to Time.local(2020, 5, 9)
+    end
+    after do
+      travel_back
+    end
+
+    # Check that changing completed sets it to the current date
+    it { expect { subject.completed = "1" }.to change { subject.completed_at&.strftime("%Y-%m-%d") }.from(nil).to("2020-05-09") }
+    it { expect { subject.completed = "0" }.not_to change { subject.completed_at }.from(nil) }
+  end
 end

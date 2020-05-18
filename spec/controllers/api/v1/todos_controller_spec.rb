@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe Api::V1::TodosController, type: :controller do
+
+  let(:json) { JSON.parse(request.body) }
+
+  # Freeze time
+  before do
+    travel_to Time.local(2020, 5, 9)
+  end
+  after do
+    travel_back
+  end
+
   ############################################################################
   describe "GET #index" do
     # Don't eager load these
     subject(:request) { get :index }
-    let(:json) { JSON.parse(request.body) }
 
     let!(:todo1) { create(:todo, id: 1, description: "Pickup laundry") }
     let!(:todo2) { create(:todo, id: 2, description: "Brush teeth") }
@@ -14,41 +24,94 @@ RSpec.describe Api::V1::TodosController, type: :controller do
 
     it { should be_successful }
     it { expect(subject.media_type).to eq("application/json") }
-    it { expect(json.keys).to contain_exactly("data") }
-    # These tests are already covered by the serializer specs
-    it { expect(Api::V1::TodoSerializer).to receive(:new).with(todos); subject }
-    it { expect(json["data"]).to be_an(Array) }
   end
 
   ############################################################################
   describe "POST #create" do
     # Don't eager load these
-    subject(:request) { post :create, params: { description: "Run 5km" } }
-    # Stub out the service object and serializer since these are thoroughly tested in isolation.
-    before(:each) do
-      allow(an_instance_of(Api::V1::TodoSerializer)).to receive(:any).and_return(expected_json)
+    subject(:request) { post :create, params: params }
+    let(:params) do
+      { description: "Run 5km" }
     end
-    let(:expected_json) do
-      {
-        "description": "Run 5km",
-        "createdAt":   "2020-05-09",
-        "updatedAt":   "2020-05-09",
-        "completedAt": nil
-      }
-    end
-
 
     it { should be_successful }
     it { expect(subject.media_type).to eq("application/json") }
     it { expect { subject }.to change { Todo.count }.by(1) }
+    it { expect(json["data"]["attributes"]["description"]).to eq "Run 5km" }
+    it { expect(json["data"]["attributes"]["completedAt"]).to be_nil }
+    it { expect(json["data"]["attributes"]["createdAt"]).to eq "2020-05-09" }
+    it { expect(json["data"]["attributes"]["updatedAt"]).to eq "2020-05-09" }
   end
 
   ############################################################################
+  describe "PUT #update" do
 
+    subject(:request) { put :update, params: params }
+
+    describe "mark as complete" do
+      let(:params) { { id: "4", completed: "1" } }
+      let!(:todo_incomplete) do
+        create :todo,
+               id:           4,
+               description:  "Go to the store",
+               created_at:   "2020-05-04",
+               updated_at:   "2020-05-04",
+               completed_at: nil
+      end
+      let(:expected_response) do
+        {
+          "data": {
+            "id":         "4",
+            "attributes": {
+              "description": "Go to the store",
+              "completedAt": "2020-05-09",
+              "createdAt":   "2020-05-04",
+              "updatedAt":   "2020-05-09"
+            },
+            "type":       "todo"
+          }
+        }
+      end
+
+      it { should be_successful }
+      it { expect(subject.media_type).to eq("application/json") }
+      it { expect(json).to eq expected_response.with_indifferent_access }
+    end
+
+    describe "mark as incomplete" do
+      let(:params) { { id: "5", completed: "0" } }
+      let!(:todo_complete) do
+        create :todo,
+               id:           5,
+               description:  "Walk the dog",
+               created_at:   "2020-05-04",
+               updated_at:   "2020-05-04",
+               completed_at: "2020-05-04"
+      end
+      let(:expected_response) do
+        {
+          "data": {
+            "id":         "5",
+            "attributes": {
+              "description": "Walk the dog",
+              "completedAt": nil,
+              "createdAt":   "2020-05-04",
+              "updatedAt":   "2020-05-09"
+            },
+            "type":       "todo"
+          }
+        }
+      end
+
+      it { should be_successful }
+      it { expect(subject.media_type).to eq("application/json") }
+      it { expect(json).to eq expected_response.with_indifferent_access }
+    end
+  end
+
+  ############################################################################
   describe "DELETE #destroy" do
     let!(:todo_destroy) { create(:todo, id: 123) }
-
-    # Don't eager load these
     subject(:request) { delete(:destroy, params: { id: "123" }) }
 
     it { should have_http_status(:no_content) }

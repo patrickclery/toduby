@@ -1,6 +1,7 @@
 import React from "react"
 import {Table} from "react-bootstrap";
 import TodoItem from "./TodoItem";
+import TodoForm from "./TodoForm";
 
 class TodoList extends React.Component {
   constructor(props) {
@@ -22,7 +23,8 @@ class TodoList extends React.Component {
             todo =>
               <TodoItem
                 todo={todo}
-                onDestroy={this.props.onDestroy}
+                onDestroy={this.props.handleDestroy}
+                onCheck={this.props.handleCheck}
               />
           )}
         </tbody>

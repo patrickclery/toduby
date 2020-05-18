@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Ability to create and display a todo item", type: :feature, js: true do
+RSpec.describe "Ability to create, display, and delete a todo item", type: :feature, js: true do
 
   let!(:todo1) { create(:todo, description: "Pickup laundry") }
   let!(:todo2) { create(:todo, description: "Brush teeth") }
@@ -27,6 +27,7 @@ RSpec.describe "Ability to create and display a todo item", type: :feature, js: 
     expect(page).to have_content("Run 5km")
 
     within("tr", text: "Run 5km") do
+      # Mark it off as completed
       click_button "Delete"
     end
     expect(page).to have_content(/removed/i)
