@@ -33,10 +33,11 @@ group :test do
   gem "factory_bot"
   gem "factory_bot_rails"
   gem "faker"
+  gem "multi_json", "~> 1.14"
+  gem "rails-controller-testing"
   gem "rspec"
   gem "rspec-core"
   gem "rspec-rails", "~> 4.0.0" # Needed for react-rails controller tests
-  gem "rails-controller-testing"
   gem "rubocop"
   gem "rubocop-rspec"
   gem "selenium-webdriver"

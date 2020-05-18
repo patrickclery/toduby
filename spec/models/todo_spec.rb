@@ -5,8 +5,10 @@ RSpec.describe Todo, type: :model do
   let!(:todo1) { create(:todo, description: "Pickup laundry") }
 
   context "schema" do
-    it { should have_db_column(:description).of_type(:text).with_options(null: false) }
     it { should have_db_column(:completed_at).of_type(:datetime).with_options(null: true) }
+    it { should have_db_column(:created_at).of_type(:datetime).with_options(null: false) }
+    it { should have_db_column(:description).of_type(:text).with_options(null: false) }
+    it { should have_db_column(:updated_at).of_type(:datetime).with_options(null: false) }
   end
 
   context "validations" do
