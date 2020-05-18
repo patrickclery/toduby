@@ -18,6 +18,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleDestroy = this.handleDestroy.bind(this);
+    this.handleCheck = this.handleCheck.bind(this);
   }
 
   async componentDidMount() {
@@ -98,6 +99,37 @@ class App extends Component {
     );
   }
 
+  async handleCheck(event, todoId) {
+    // event.preventDefault();
+
+    // Get the todo
+    const todo = this.state.todos.filter(obj => {
+      return obj.id === todoId
+    })[0]
+    const checked = event.target.checked ? "1" : "0"
+
+    const uri = `${this.apiBaseUri}/todos/${todo.id}`;
+    const requestOptions = {
+      method:  'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({completed: checked})
+    };
+
+    const response = await fetch(uri, requestOptions);
+    const json = await response.json();
+
+    // If we get an error, display the error message
+    if (json.errors) {
+      this.setState({errorMessage: json.errors[0].detail})
+    } else {
+      // Loop through Todos and replace todo with updated todo
+      const newTodos = this.state.todos;
+      const todoIndex = newTodos.findIndex(obj => obj.id === todo.id)
+      newTodos.splice(todoIndex, 1, json.data)
+      this.setState({todos: newTodos});
+    }
+  }
+
   render() {
     return (
       <div className="container m-3">
@@ -107,7 +139,8 @@ class App extends Component {
 
         <TodoList
           todos={this.state.todos}
-          onDestroy={this.handleDestroy}
+          handleDestroy={this.handleDestroy}
+          handleCheck={this.handleCheck}
         />
 
         {this.state.successMessage &&
@@ -123,8 +156,8 @@ class App extends Component {
 
         <TodoForm
           description={this.state.description}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
         />
       </div>
     );

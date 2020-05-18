@@ -7,15 +7,27 @@ class TodoItem extends React.Component {
   }
 
   render() {
+    const {id, attributes} = this.props.todo;
+    const {onCheck, onDestroy} = this.props;
+    const {description, completedAt} = attributes;
+
     return (
-      <tr key={this.props.todo.id}>
-        <td>{this.props.todo.attributes.description}</td>
-        <td>{this.props.todo.attributes.completedAt}</td>
-        <td><Button
-          onClick={event => {
-            this.props.onDestroy(event, this.props.todo.id)
-          }}
-        >Delete</Button></td>
+      <tr key={id}>
+        <td>{description}</td>
+        <td>{completedAt}</td>
+        <td>
+          {completedAt
+            ? <input type="checkbox" value={id} onChange={event => {
+              onCheck(event, id)
+            }} checked/>
+            : <input type="checkbox" value={id} onChange={event => {
+              onCheck(event, id)
+            }}/>
+          }
+        </td>
+        <td><Button onClick={event => {
+          onDestroy(event, id)
+        }}>Delete</Button></td>
       </tr>
     );
   }

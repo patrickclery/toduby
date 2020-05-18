@@ -3,15 +3,18 @@
 RSpec.describe Api::V1::TodoSerializer, type: :serializer do
 
   context "single todo" do
-    let!(:todo1) { create(:todo, description: "Pickup laundry") }
-
     # Pass it to the serializer and return a JSON hash
-    subject(:json_data) { described_class.new(todo1).as_json["data"] }
+    subject(:json_attributes) { json_data["attributes"] }
+    let(:json_data) { described_class.new(todo1).as_json["data"] }
 
-    describe "attributes" do
-      subject { json_data["attributes"] }
-      it { expect(subject.keys).to contain_exactly("description", "completedAt", "createdAt", "updatedAt") }
+    let!(:todo1) do
+      create :todo,
+             description:  "Pickup laundry",
+             completed_at: "2020-05-02"
     end
+
+    it { expect(subject.keys).to contain_exactly("description", "completedAt", "createdAt", "updatedAt") }
+    it { expect(subject["completedAt"]).to eq "2020-05-02" }
   end
 
   context "collection" do

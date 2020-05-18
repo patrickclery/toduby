@@ -7,5 +7,5 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Todo.create({ description: "Pickup laundry" })
-Todo.create({ description: "Brush teeth" })
+Todo.create({ description: "Brush teeth", completed_at: "2020-01-04" })
 Todo.create({ description: "Feed cat" })

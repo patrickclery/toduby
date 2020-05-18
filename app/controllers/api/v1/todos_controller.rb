@@ -31,9 +31,9 @@ module Api
       # PATCH/PUT /todos/1
       def update
         if @todo.update(todo_params)
-          render json: @todo
+          render json: TodoSerializer.new(@todo)
         else
-          render json: @todo.errors, status: :unprocessable_entity
+          render json: TodoSerializer.new(@todo), status: :unprocessable_entity
         end
       end
 
@@ -51,7 +51,7 @@ module Api
 
       # Only allow a trusted parameter "white list" through.
       def todo_params
-        params.permit(:description)
+        params.permit(:description, :completed)
       end
     end
   end
