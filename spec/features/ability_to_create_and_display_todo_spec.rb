@@ -2,9 +2,9 @@
 
 RSpec.describe "Ability to create and display a todo item", type: :feature, js: true do
 
-  let!(:todo1) { create(:todo, id: 1, description: "Pickup laundry") }
-  let!(:todo2) { create(:todo, id: 2, description: "Brush teeth") }
-  let!(:todo3) { create(:todo, id: 3, description: "Feed cat") }
+  let!(:todo1) { create(:todo, description: "Pickup laundry") }
+  let!(:todo2) { create(:todo, description: "Brush teeth") }
+  let!(:todo3) { create(:todo, description: "Feed cat") }
 
   it "creates and displays a todo item" do
     # Single-page app, so everything resides at / or in the API /api/v1
@@ -25,5 +25,11 @@ RSpec.describe "Ability to create and display a todo item", type: :feature, js: 
     # Async javascript calls the API, creates a new Todo, then React adds it to the list
     expect(page).to have_content(/success/i)
     expect(page).to have_content("Run 5km")
+
+    within("tr", text: "Run 5km") do
+      click_button "Delete"
+    end
+    expect(page).to have_content(/removed/i)
+    expect(page).not_to have_css("td", text: "Run 5km")
   end
 end

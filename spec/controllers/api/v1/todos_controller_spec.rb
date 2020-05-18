@@ -42,4 +42,17 @@ RSpec.describe Api::V1::TodosController, type: :controller do
     it { expect(subject.media_type).to eq("application/json") }
     it { expect { subject }.to change { Todo.count }.by(1) }
   end
+
+  ############################################################################
+
+  describe "DELETE #destroy" do
+    let!(:todo_destroy) { create(:todo, id: 123) }
+
+    # Don't eager load these
+    subject(:request) { delete(:destroy, params: { id: "123" }) }
+
+    it { should have_http_status(:no_content) }
+    it { expect { subject }.to change { Todo.count }.by(-1) }
+  end
+
 end

@@ -1,5 +1,6 @@
 import React from "react"
 import {Table} from "react-bootstrap";
+import TodoItem from "./TodoItem";
 
 class TodoList extends React.Component {
   constructor(props) {
@@ -13,21 +14,22 @@ class TodoList extends React.Component {
           <tr>
             <th>Description</th>
             <th>Completed</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {this.props.todos && this.props.todos.map(
             todo =>
-              <tr key={todo.id}>
-                <td>{todo.attributes.description}</td>
-                <td>{todo.attributes.completedAt}</td>
-              </tr>
+              <TodoItem
+                todo={todo}
+                onDestroy={this.props.onDestroy}
+              />
           )}
         </tbody>
         {this.props.todos &&
         <tfoot>
           <tr>
-            <td colSpan="2">Total of {this.props.todos.length} items.</td>
+            <td colSpan="3">Total of {this.props.todos.length} items.</td>
           </tr>
         </tfoot>}
       </Table>

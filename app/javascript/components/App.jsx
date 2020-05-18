@@ -10,7 +10,6 @@ class App extends Component {
 
     this.state = {
       successMessage: null,
-      successMessage: null,
       description:    null,
       todos:          []
     }
@@ -18,6 +17,7 @@ class App extends Component {
     this.apiBaseUri = "/api/v1"
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleDestroy = this.handleDestroy.bind(this);
   }
 
   async componentDidMount() {
@@ -33,7 +33,8 @@ class App extends Component {
       this.setState(
         {
           todos:       json.data,
-          description: null
+          description: null,
+          todoId:      null
         }
       );
     }
@@ -70,6 +71,33 @@ class App extends Component {
     }
   }
 
+  async handleDestroy(event, todoId) {
+    event.preventDefault();
+
+    // Get the todo
+    const todo = this.state.todos.filter(obj => {
+      return obj.id === todoId
+    })[0]
+
+    const uri = `${this.apiBaseUri}/todos/${todo.id}`;
+    const requestOptions = {
+      method:  'DELETE',
+      headers: {'Content-Type': 'application/json'}
+    };
+
+    const response = await fetch(uri, requestOptions);
+
+    this.setState(
+      {
+        todos:          this.state.todos.filter(todo => {
+          return todo.id !== todoId
+        }),
+        successMessage: `Successfully removed ${todo.attributes.description}!`,
+        description:    null
+      }
+    );
+  }
+
   render() {
     return (
       <div className="container m-3">
@@ -77,7 +105,10 @@ class App extends Component {
           <h1>Todo App</h1>
         </Jumbotron>
 
-        <TodoList todos={this.state.todos}/>
+        <TodoList
+          todos={this.state.todos}
+          onDestroy={this.handleDestroy}
+        />
 
         {this.state.successMessage &&
         <Alert variant="success" onClose={() => this.setState({successMessage: null})} dismissible>
@@ -91,7 +122,7 @@ class App extends Component {
         </Alert>}
 
         <TodoForm
-          description={this.state.descritpion}
+          description={this.state.description}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         />
