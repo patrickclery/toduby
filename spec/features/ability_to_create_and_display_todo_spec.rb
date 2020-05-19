@@ -2,9 +2,17 @@
 
 RSpec.describe "Ability to create, display, and delete a todo item", type: :feature, js: true do
 
-  let!(:todo1) { create(:todo, description: "Pickup laundry") }
-  let!(:todo2) { create(:todo, description: "Brush teeth") }
-  let!(:todo3) { create(:todo, description: "Feed cat") }
+  # Freeze time
+  before do
+    travel_to Time.local(2020, 5, 9)
+  end
+  after do
+    travel_back
+  end
+
+  let!(:todo1) { create(:todo, description: "Pickup laundry", created_at: "2020-03-03") }
+  let!(:todo2) { create(:todo, description: "Brush teeth", created_at: "2020-03-03") }
+  let!(:todo3) { create(:todo, description: "Feed cat", created_at: "2020-03-03") }
 
   it "creates and displays a todo item" do
     # Single-page app, so everything resides at / or in the API /api/v1
@@ -28,6 +36,10 @@ RSpec.describe "Ability to create, display, and delete a todo item", type: :feat
 
     within("tr", text: "Run 5km") do
       # Mark it off as completed
+      page.find("input[type='checkbox']").check
+      # When it's completed, we will see the date filled-in (as of today)
+      expect(page).to have_content("2020-05-09")
+      # Delete it
       click_button "Delete"
     end
     expect(page).to have_content(/removed/i)

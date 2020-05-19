@@ -1,5 +1,6 @@
 import React from "react"
 import {Button} from "react-bootstrap";
+import styles from "./TodoItem.css"
 
 class TodoItem extends React.Component {
   constructor(props) {
@@ -17,17 +18,25 @@ class TodoItem extends React.Component {
         <td>{completedAt}</td>
         <td>
           {completedAt
-            ? <input type="checkbox" value={id} onChange={event => {
-              onCheck(event, id)
-            }} checked/>
-            : <input type="checkbox" value={id} onChange={event => {
-              onCheck(event, id)
-            }}/>
-          }
-        </td>
-        <td><Button onClick={event => {
-          onDestroy(event, id)
-        }}>Delete</Button></td>
+            ? <input
+              className="todo-checkbox"
+              type="checkbox"
+              value={id}
+              onChange={event => {
+                onCheck(event, id)
+              }} checked/>
+            : <input
+              className="todo-checkbox"
+              type="checkbox"
+              value={id}
+              onChange={event => {
+                onCheck(event, id)
+              }}/>
+          }<span className="delete-button"><
+          Button
+          onClick={event => {
+            onDestroy(event, id)
+          }}>Delete</Button></span></td>
       </tr>
     );
   }
