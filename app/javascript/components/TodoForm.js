@@ -19,9 +19,7 @@ class TodoForm extends React.Component {
                 <Form.Control
                   size="lg"
                   type="text"
-                  value={this.props.description || ""}
                   placeholder="Describe the action you will do"
-                  onChange={this.props.handleChange}
                 />
               </Form.Group>
               <Button type="submit">Submit</Button>

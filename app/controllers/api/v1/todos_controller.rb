@@ -7,7 +7,7 @@ module Api
 
       # GET /todos
       def index
-        @todos = Todo.all
+        @todos = Todo.all.order(:description)
 
         render json: TodoSerializer.new(@todos)
       end

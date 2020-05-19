@@ -72,6 +72,29 @@ class App extends Component {
     }
   }
 
+  async handleUpdate(_value, _todoId) {
+    const uri = `${this.apiBaseUri}/todos/`;
+    const requestOptions = {
+      method:  'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({description: _value})
+    };
+
+    let response = await fetch(uri, requestOptions);
+    const json = await response.json();
+
+    // If we get an error, display the error message
+    if (json.errors) {
+      this.setState({errorMessage: json.errors[0].detail})
+    } else {
+      this.setState({
+                      todos:          [...this.state.todos, json.data],
+                      successMessage: `Successfully added ${this.state.description}!`,
+                      description:    null
+                    });
+    }
+  }
+
   async handleDestroy(event, todoId) {
     event.preventDefault();
 
@@ -99,32 +122,30 @@ class App extends Component {
     );
   }
 
-  async handleCheck(event, todoId) {
-    // event.preventDefault();
-
-    // Get the todo
+  async handleCheck(event) {
+    const id = event.target.value;
+    // Retrieve the Todo from the array of todos
     const todo = this.state.todos.filter(obj => {
-      return obj.id === todoId
+      return obj.id === id
     })[0]
-    const checked = event.target.checked ? "1" : "0"
 
+    // Sent the request to the API to update
+    const checked = event.target.checked ? "1" : "0"
     const uri = `${this.apiBaseUri}/todos/${todo.id}`;
     const requestOptions = {
       method:  'PUT',
       headers: {'Content-Type': 'application/json'},
       body:    JSON.stringify({completed: checked})
     };
-
     const response = await fetch(uri, requestOptions);
     const json = await response.json();
-
     // If we get an error, display the error message
     if (json.errors) {
       this.setState({errorMessage: json.errors[0].detail})
     } else {
       // Loop through Todos and replace todo with updated todo
       const newTodos = this.state.todos;
-      const todoIndex = newTodos.findIndex(obj => obj.id === todo.id)
+      const todoIndex = newTodos.findIndex(obj => obj.id === id)
       newTodos.splice(todoIndex, 1, json.data)
       this.setState({todos: newTodos});
     }

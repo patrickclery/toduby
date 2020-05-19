@@ -1,6 +1,7 @@
 import React from "react"
-import {Button} from "react-bootstrap";
-import styles from "./TodoItem.css"
+import {Button, Form} from "react-bootstrap";
+import TodoDescription from "./TodoDescription";
+import TodoCheckbox from "./TodoCheckbox";
 
 class TodoItem extends React.Component {
   constructor(props) {
@@ -9,34 +10,29 @@ class TodoItem extends React.Component {
 
   render() {
     const {id, attributes} = this.props.todo;
-    const {onCheck, onDestroy} = this.props;
+    const {todo, handleCheck, handleDestroy, handleUpdate} = this.props;
     const {description, completedAt} = attributes;
 
     return (
       <tr key={id}>
-        <td>{description}</td>
-        <td>{completedAt}</td>
         <td>
-          {completedAt
-            ? <input
-              className="todo-checkbox"
-              type="checkbox"
-              value={id}
-              onChange={event => {
-                onCheck(event, id)
-              }} checked/>
-            : <input
-              className="todo-checkbox"
-              type="checkbox"
-              value={id}
-              onChange={event => {
-                onCheck(event, id)
-              }}/>
-          }<span className="delete-button"><
-          Button
-          onClick={event => {
-            onDestroy(event, id)
-          }}>Delete</Button></span></td>
+          <TodoCheckbox
+            value={id}
+            handleCheck={handleCheck}
+            isChecked={!!completedAt}/>
+        </td>
+        <td>
+          <TodoDescription
+            todoId={id}
+            description={description}
+            handleUpdate={handleUpdate}
+          />
+        </td>
+        <td>
+          <Button onClick={event => {
+            handleDestroy(event, id)
+          }}>Delete</Button>
+        </td>
       </tr>
     );
   }
