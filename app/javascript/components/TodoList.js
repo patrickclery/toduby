@@ -1,6 +1,7 @@
 import React from "react"
 import {Table} from "react-bootstrap";
 import TodoItem from "./TodoItem";
+import TodoCheckbox from "./TodoCheckbox";
 
 class TodoList extends React.Component {
   constructor(props) {
@@ -8,7 +9,7 @@ class TodoList extends React.Component {
   }
 
   render() {
-    const {handleDestroy, handleCheck, todos} = this.props;
+    const {handleDestroy, handleCheck, handleUpdate, todos} = this.props;
     return (
       <Table striped>
         <tbody>
@@ -18,6 +19,7 @@ class TodoList extends React.Component {
                 todo={todo}
                 handleDestroy={handleDestroy}
                 handleCheck={handleCheck}
+                handleUpdate={handleUpdate}
               />
           )}
         </tbody>

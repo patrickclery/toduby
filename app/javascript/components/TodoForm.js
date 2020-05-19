@@ -7,19 +7,22 @@ class TodoForm extends React.Component {
   }
 
   render() {
+    const {handleChange, handleSubmit, description} = this.props;
     return (
       <React.Fragment>
         <h1>New Todo</h1>
 
-        <Card bg="info">
+        <Card>
           <Card.Body>
-            <Form onSubmit={this.props.handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formDescription">
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   size="lg"
                   type="text"
                   placeholder="Describe the action you will do"
+                  onChange={handleChange}
+                  value={description}
                 />
               </Form.Group>
               <Button type="submit">Submit</Button>

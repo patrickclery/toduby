@@ -19,6 +19,7 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleDestroy = this.handleDestroy.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   async componentDidMount() {
@@ -34,8 +35,7 @@ class App extends Component {
       this.setState(
         {
           todos:       json.data,
-          description: null,
-          todoId:      null
+          description: null
         }
       );
     }
@@ -55,8 +55,8 @@ class App extends Component {
       body:    JSON.stringify({description: this.state.description})
     };
 
-    const response = await fetch(uri, requestOptions);
-    const json = await response.json();
+    const response = await fetch(uri, requestOptions)
+    const json = await response.json()
 
     // If we get an error, display the error message
     if (json.errors) {
@@ -68,12 +68,12 @@ class App extends Component {
           successMessage: `Successfully added ${this.state.description}!`,
           description:    null
         }
-      );
+      )
     }
   }
 
   async handleUpdate(_value, _todoId) {
-    const uri = `${this.apiBaseUri}/todos/`;
+    const uri = `${this.apiBaseUri}/todos/${_todoId}`;
     const requestOptions = {
       method:  'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -81,49 +81,45 @@ class App extends Component {
     };
 
     let response = await fetch(uri, requestOptions);
-    const json = await response.json();
+    const json = await response.json()
 
     // If we get an error, display the error message
     if (json.errors) {
       this.setState({errorMessage: json.errors[0].detail})
     } else {
-      this.setState({
-                      todos:          [...this.state.todos, json.data],
-                      successMessage: `Successfully added ${this.state.description}!`,
-                      description:    null
-                    });
+      this.setState({successMessage: `Successfully updated ${this.state.description}!`,})
     }
   }
 
   async handleDestroy(event, todoId) {
-    event.preventDefault();
+    event.preventDefault()
 
     // Get the todo
     const todo = this.state.todos.filter(obj => {
       return obj.id === todoId
     })[0]
 
-    const uri = `${this.apiBaseUri}/todos/${todo.id}`;
+    const uri = `${this.apiBaseUri}/todos/${todo.id}`
     const requestOptions = {
       method:  'DELETE',
       headers: {'Content-Type': 'application/json'}
-    };
+    }
 
-    const response = await fetch(uri, requestOptions);
-
-    this.setState(
-      {
-        todos:          this.state.todos.filter(todo => {
-          return todo.id !== todoId
-        }),
-        successMessage: `Successfully removed ${todo.attributes.description}!`,
-        description:    null
-      }
-    );
+    fetch(uri, requestOptions).then(response => {
+      this.setState(
+        {
+          todos:          this.state.todos.filter(todo => {
+            return todo.id !== todoId
+          }),
+          successMessage: `Successfully removed ${todo.attributes.description}!`,
+          description:    null
+        }
+      )
+    })
   }
 
   async handleCheck(event) {
-    const id = event.target.value;
+    const id = event.target.value
     // Retrieve the Todo from the array of todos
     const todo = this.state.todos.filter(obj => {
       return obj.id === id
@@ -131,23 +127,23 @@ class App extends Component {
 
     // Sent the request to the API to update
     const checked = event.target.checked ? "1" : "0"
-    const uri = `${this.apiBaseUri}/todos/${todo.id}`;
+    const uri = `${this.apiBaseUri}/todos/${todo.id}`
     const requestOptions = {
       method:  'PUT',
       headers: {'Content-Type': 'application/json'},
       body:    JSON.stringify({completed: checked})
-    };
-    const response = await fetch(uri, requestOptions);
-    const json = await response.json();
+    }
+    const response = await fetch(uri, requestOptions)
+    const json = await response.json()
     // If we get an error, display the error message
     if (json.errors) {
       this.setState({errorMessage: json.errors[0].detail})
     } else {
       // Loop through Todos and replace todo with updated todo
-      const newTodos = this.state.todos;
+      const newTodos = this.state.todos
       const todoIndex = newTodos.findIndex(obj => obj.id === id)
       newTodos.splice(todoIndex, 1, json.data)
-      this.setState({todos: newTodos});
+      this.setState({todos: newTodos})
     }
   }
 
@@ -162,6 +158,7 @@ class App extends Component {
           todos={this.state.todos}
           handleDestroy={this.handleDestroy}
           handleCheck={this.handleCheck}
+          handleUpdate={this.handleUpdate}
         />
 
         {this.state.successMessage &&
@@ -181,7 +178,7 @@ class App extends Component {
           handleSubmit={this.handleSubmit}
         />
       </div>
-    );
+    )
   }
 }
 

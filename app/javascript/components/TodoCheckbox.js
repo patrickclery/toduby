@@ -9,7 +9,7 @@ class TodoCheckbox extends React.Component {
         type="checkbox"
         value={value}
         checked={isChecked}
-        onChange={e => handleCheck(e)}/>
+        onChange={handleCheck}/>
     )
   }
 }
