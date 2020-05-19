@@ -10,7 +10,7 @@ RSpec.describe Api::V1::TodoSerializer, type: :serializer do
     let!(:todo1) do
       create :todo,
              description:  "Pickup laundry",
-             completed_at: "2020-05-02"
+             completed_at: DateTime.new(2020, 5, 2)
     end
 
     it { expect(subject.keys).to contain_exactly("description", "completedAt", "createdAt", "updatedAt") }

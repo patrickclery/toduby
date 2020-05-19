@@ -10,9 +10,9 @@ RSpec.describe "Ability to create, display, and delete a todo item", type: :feat
     travel_back
   end
 
-  let!(:todo1) { create(:todo, description: "Pickup laundry", created_at: "2020-03-03") }
-  let!(:todo2) { create(:todo, description: "Brush teeth", created_at: "2020-03-03") }
-  let!(:todo3) { create(:todo, description: "Feed cat", created_at: "2020-03-03") }
+  let!(:todo1) { create(:todo, description: "Pickup laundry", created_at: DateTime.new(2020, 3, 3)) }
+  let!(:todo2) { create(:todo, description: "Brush teeth", created_at: DateTime.new(2020, 3, 3)) }
+  let!(:todo3) { create(:todo, description: "Feed cat", created_at: DateTime.new(2020, 3, 3)) }
 
   it "creates and displays a todo item" do
     # Single-page app, so everything resides at / or in the API /api/v1
