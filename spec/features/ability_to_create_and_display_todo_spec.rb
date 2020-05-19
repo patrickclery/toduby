@@ -31,19 +31,21 @@ RSpec.describe "Ability to create, display, and delete a todo item", type: :feat
     expect(page).to have_content(/success/i)
     expect(page).to have_content("Run 5km")
 
-    within("tr", text: "Run 5km") do
-      # Change the description
-      fill_in "Description", with: "Run 10km"
-      click_button "Save"
-      expect(page).to have_content("Run 10km")
-      # Mark it off as completed
-      check "Complete"
-      # When it's completed, we will see the date filled-in (as of today)
-      expect(page).to have_content("2020-05-09")
+    # Hover over the element so the button appears
+    page.find("div[editext='view']", text: "Run 5km").hover
+    # Click the pencil button
+    page.find("button[editext='edit-button']").click
+    # Change the description
+    page.find("input[editext='input']").fill_in with: "Run 10km"
+    # Click save
+    page.find("button[editext='save-button']").click
+    # Mark it off as completed
+    within("tr", text: "Run 10km") do
+      page.find("input[type='checkbox']").check
       # Delete it
       click_button "Delete"
     end
     expect(page).to have_content(/removed/i)
-    expect(page).not_to have_css("td", text: "Run 5km")
+    expect(page).not_to have_css("tr>td", text: "Run 10km")
   end
 end

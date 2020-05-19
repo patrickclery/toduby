@@ -9,6 +9,7 @@ class TodoCheckbox extends React.Component {
         type="checkbox"
         value={value}
         checked={isChecked}
+        aria-label="complete-checkbox"
         onChange={handleCheck}/>
     )
   }
