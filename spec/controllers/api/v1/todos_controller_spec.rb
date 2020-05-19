@@ -54,8 +54,8 @@ RSpec.describe Api::V1::TodosController, type: :controller do
         create :todo,
                id:           4,
                description:  "Go to the store",
-               created_at:   "2020-05-04",
-               updated_at:   "2020-05-04",
+               created_at:   DateTime.new(2020, 5, 4),
+               updated_at:   DateTime.new(2020, 5, 4),
                completed_at: nil
       end
       let(:expected_response) do
@@ -84,9 +84,9 @@ RSpec.describe Api::V1::TodosController, type: :controller do
         create :todo,
                id:           5,
                description:  "Walk the dog",
-               created_at:   "2020-05-04",
-               updated_at:   "2020-05-04",
-               completed_at: "2020-05-04"
+               created_at:   DateTime.new(2020, 5, 4),
+               updated_at:   DateTime.new(2020, 5, 4),
+               completed_at: DateTime.new(2020, 5, 4)
       end
       let(:expected_response) do
         {
