@@ -1,7 +1,7 @@
 import React from "react"
 import {Table} from "react-bootstrap";
 import TodoItem from "./TodoItem";
-import TodoForm from "./TodoForm";
+import TodoCheckbox from "./TodoCheckbox";
 
 class TodoList extends React.Component {
   constructor(props) {
@@ -9,29 +9,24 @@ class TodoList extends React.Component {
   }
 
   render() {
+    const {handleDestroy, handleCheck, handleUpdate, todos} = this.props;
     return (
       <Table striped>
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Completed</th>
-            <th>Action</th>
-          </tr>
-        </thead>
         <tbody>
-          {this.props.todos && this.props.todos.map(
+          {todos && todos.map(
             todo =>
               <TodoItem
                 todo={todo}
-                onDestroy={this.props.handleDestroy}
-                onCheck={this.props.handleCheck}
+                handleDestroy={handleDestroy}
+                handleCheck={handleCheck}
+                handleUpdate={handleUpdate}
               />
           )}
         </tbody>
-        {this.props.todos &&
+        {todos &&
         <tfoot>
           <tr>
-            <td colSpan="3">Total of {this.props.todos.length} items.</td>
+            <td colSpan="3">Total of {todos.length} items.</td>
           </tr>
         </tfoot>}
       </Table>
