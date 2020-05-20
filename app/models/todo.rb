@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Todo < ApplicationRecord
+  belongs_to :user
+
+  scope :by_user, lambda { |user|
+    where(user_id: user.id)
+  }
+
   attribute :description
   attribute :completed_at
   attribute :priority
@@ -11,7 +17,7 @@ class Todo < ApplicationRecord
             presence:  true,
             inclusion: [*0..2, "0", "1", "2"]
 
-  # @param [String] is_complete "1" to mark as completed.
+# @param [String] is_complete "1" to mark as completed.
   def completed=(is_complete)
     self.completed_at = is_complete == "1" ? Time.now : nil
   end

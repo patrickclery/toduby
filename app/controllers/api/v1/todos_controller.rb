@@ -7,19 +7,14 @@ module Api
 
       # GET /todos
       def index
-        @todos = Todo.all.order("LOWER(description)")
+        @todos = Todo.by_user(current_user).all.order("LOWER(description)")
 
         render json: TodoSerializer.new(@todos)
       end
 
-      # GET /todos/1
-      def show
-        render json: @todo
-      end
-
       # POST /todos
       def create
-        @todo = Todo.new(todo_params)
+        @todo = Todo.by_user(current_user).new(todo_params)
 
         if @todo.save
           render json: TodoSerializer.new(@todo), status: :created
@@ -46,12 +41,12 @@ module Api
 
       # Use callbacks to share common setup or constraints between actions.
       def set_todo
-        @todo = Todo.find(params[:id])
+        @todo = Todo.by_user(current_user).find(params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.
       def todo_params
-        params.permit(:description, :completed, :priority)
+        params.permit(:description, :completed, :priority, :user_id)
       end
     end
   end

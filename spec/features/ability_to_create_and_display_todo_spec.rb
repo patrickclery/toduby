@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe "Ability to create, display, and delete a todo item", type: :feature, js: true do
+  # Let! must be before `before`
+  let!(:user) { create(:user, id: 1) }
+  before(:each) do
+    @user ||= User.find(1)
+    login_as(@user)
+  end
+  let(:json) { JSON.parse(request.body) }
 
   # Freeze time
-  before do
-    travel_to Time.local(2020, 5, 9)
-  end
-  after do
-    travel_back
-  end
+  before { travel_to Time.local(2020, 5, 9) }
+  after { travel_back }
 
-  let!(:todo1) { create(:todo, description: "Pickup laundry", created_at: DateTime.new(2020, 3, 3)) }
-  let!(:todo2) { create(:todo, description: "Brush teeth", created_at: DateTime.new(2020, 3, 3)) }
-  let!(:todo3) { create(:todo, description: "Feed cat", created_at: DateTime.new(2020, 3, 3)) }
+  let!(:todo1) { create(:todo, user: user, description: "Pickup laundry", created_at: DateTime.new(2020, 3, 3)) }
+  let!(:todo2) { create(:todo, user: user, description: "Brush teeth", created_at: DateTime.new(2020, 3, 3)) }
+  let!(:todo3) { create(:todo, user: user, description: "Feed cat", created_at: DateTime.new(2020, 3, 3)) }
 
   it "creates and displays a todo item" do
     # Single-page app, so everything resides at / or in the API /api/v1
