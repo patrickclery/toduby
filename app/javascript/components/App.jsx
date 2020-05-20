@@ -84,7 +84,7 @@ class App extends Component {
     // Get the todo
     const todoIndex = this.state.todos.findIndex(obj => obj.id === _todoId)
     let todo = this.state.todos[todoIndex];
-    todo[_field] = _value;
+    todo.attributes[_field] = _value;
 
     const uri = `${this.apiBaseUri}/todos/${todo.id}`;
     const requestOptions = {
@@ -104,7 +104,7 @@ class App extends Component {
       const newTodos = this.state.todos
       newTodos.splice(todoIndex, 1, json.data)
       this.setState({todos: newTodos})
-      this.setState({successMessage: `Successfully updated ${todo.description}!`,})
+      this.setState({successMessage: `Successfully updated ${todo.attributes.description}!`,})
     }
   }
 
