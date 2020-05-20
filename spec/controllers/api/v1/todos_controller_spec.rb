@@ -5,13 +5,8 @@ RSpec.describe Api::V1::TodosController, type: :controller do
   let(:json) { JSON.parse(request.body) }
 
   # Freeze time
-  before do
-    travel_to Time.local(2020, 5, 9)
-  end
-  after do
-    travel_back
-  end
-
+  before { travel_to Time.local(2020, 5, 9) }
+  after { travel_back }
   ############################################################################
   describe "GET #index" do
     # Don't eager load these
@@ -24,6 +19,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
 
     it { should be_successful }
     it { expect(subject.media_type).to eq("application/json") }
+    it { expect(Api::V1::TodoSerializer).to receive(:new).with(all(an_instance_of(Todo))); subject }
   end
 
   ############################################################################
@@ -31,16 +27,13 @@ RSpec.describe Api::V1::TodosController, type: :controller do
     # Don't eager load these
     subject(:request) { post :create, params: params }
     let(:params) do
-      { description: "Run 5km" }
+      { description: "Run 5km", priority: "0" }
     end
 
     it { should be_successful }
     it { expect(subject.media_type).to eq("application/json") }
     it { expect { subject }.to change { Todo.count }.by(1) }
-    it { expect(json["data"]["attributes"]["description"]).to eq "Run 5km" }
-    it { expect(json["data"]["attributes"]["completedAt"]).to be_nil }
-    it { expect(json["data"]["attributes"]["createdAt"]).to eq "2020-05-09" }
-    it { expect(json["data"]["attributes"]["updatedAt"]).to eq "2020-05-09" }
+    it { expect(Api::V1::TodoSerializer).to receive(:new).with(an_instance_of(Todo)); subject }
   end
 
   ############################################################################
@@ -48,6 +41,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
 
     subject(:request) { put :update, params: params }
 
+    ##########################################################################
     describe "mark as complete" do
       let(:params) { { id: "4", completed: "1" } }
       let!(:todo_incomplete) do
@@ -55,6 +49,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
                id:           4,
                description:  "Go to the store",
                created_at:   DateTime.new(2020, 5, 4),
+               priority:     2,
                updated_at:   DateTime.new(2020, 5, 4),
                completed_at: nil
       end
@@ -66,6 +61,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
               "description": "Go to the store",
               "completedAt": "2020-05-09",
               "createdAt":   "2020-05-04",
+              "priority":    "2",
               "updatedAt":   "2020-05-09"
             },
             "type":       "todo"
@@ -76,8 +72,10 @@ RSpec.describe Api::V1::TodosController, type: :controller do
       it { should be_successful }
       it { expect(subject.media_type).to eq("application/json") }
       it { expect(json).to eq expected_response.with_indifferent_access }
+      it { expect(Api::V1::TodoSerializer).to receive(:new).with(an_instance_of(Todo)); subject }
     end
 
+    ##########################################################################
     describe "mark as incomplete" do
       let(:params) { { id: "5", completed: "0" } }
       let!(:todo_complete) do
@@ -86,6 +84,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
                description:  "Walk the dog",
                created_at:   DateTime.new(2020, 5, 4),
                updated_at:   DateTime.new(2020, 5, 4),
+               priority:     2,
                completed_at: DateTime.new(2020, 5, 4)
       end
       let(:expected_response) do
@@ -96,6 +95,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
               "description": "Walk the dog",
               "completedAt": nil,
               "createdAt":   "2020-05-04",
+              "priority":    "2",
               "updatedAt":   "2020-05-09"
             },
             "type":       "todo"
@@ -106,6 +106,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
       it { should be_successful }
       it { expect(subject.media_type).to eq("application/json") }
       it { expect(json).to eq expected_response.with_indifferent_access }
+      it { expect(Api::V1::TodoSerializer).to receive(:new).with(an_instance_of(Todo)); subject }
     end
   end
 

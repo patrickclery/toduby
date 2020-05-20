@@ -7,7 +7,7 @@ class TodoDescription extends React.Component {
     const {todoId, description, handleUpdate} = this.props;
     return <EdiText
       cancelOnEscape
-      onSave={v => handleUpdate(v, todoId)}
+      onSave={v => handleUpdate("description", v, todoId)}
       showButtonsOnHover
       submitOnEnter
       submitOnUnfocus

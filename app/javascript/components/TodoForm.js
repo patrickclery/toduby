@@ -7,23 +7,35 @@ class TodoForm extends React.Component {
   }
 
   render() {
-    const {handleChange, handleSubmit, description} = this.props;
+    const {handleChange, handleSubmit, description, priority} = this.props;
     return (
       <React.Fragment>
         <h1>New Todo</h1>
 
         <Card>
           <Card.Body>
-            <Form onSubmit={handleSubmit}>
+            <Form
+              onSubmit={handleSubmit}
+              onChange={handleChange}>
               <Form.Group controlId="formDescription">
                 <Form.Label>Description</Form.Label>
                 <Form.Control
+                  name="description"
                   size="lg"
                   type="text"
                   placeholder="Describe the action you will do"
-                  onChange={handleChange}
-                  value={description}
-                />
+                  value={description}/>
+              </Form.Group>
+              <Form.Group controlId="formPriority">
+                <Form.Label>Priority</Form.Label>
+                <Form.Control
+                  name="priority"
+                  as="select"
+                  defaultValue="0">
+                  <option value="0">Low</option>
+                  <option value="1">Medium</option>
+                  <option value="2">High</option>
+                </Form.Control>
               </Form.Group>
               <Button type="submit">Submit</Button>
             </Form>
