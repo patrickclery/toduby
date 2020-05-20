@@ -1,0 +1,17 @@
+name: Docker
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Publish Docker Image
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        with:
+          name: patrickclery/toduby
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
