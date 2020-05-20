@@ -11,6 +11,7 @@ class App extends Component {
     this.state = {
       successMessage: null,
       description:    null,
+      priority:       "0",
       todos:          []
     }
 
@@ -35,14 +36,15 @@ class App extends Component {
       this.setState(
         {
           todos:       json.data,
-          description: null
+          description: null,
+          priority:    "0"
         }
       );
     }
   }
 
   async handleChange(event) {
-    this.setState({description: event.target.value})
+    this.setState({[event.target.name]: event.target.value})
   }
 
   async handleSubmit(event) {
@@ -52,7 +54,12 @@ class App extends Component {
     const requestOptions = {
       method:  'POST',
       headers: {'Content-Type': 'application/json'},
-      body:    JSON.stringify({description: this.state.description})
+      body:    JSON.stringify(
+        {
+          description: this.state.description,
+          priority:    this.state.priority
+        }
+      )
     };
 
     const response = await fetch(uri, requestOptions)
@@ -66,18 +73,24 @@ class App extends Component {
         {
           todos:          [...this.state.todos, json.data],
           successMessage: `Successfully added ${this.state.description}!`,
-          description:    null
+          description:    null,
+          priority:       "0"
         }
       )
     }
   }
 
-  async handleUpdate(_value, _todoId) {
-    const uri = `${this.apiBaseUri}/todos/${_todoId}`;
+  async handleUpdate(_field, _value, _todoId) {
+    // Get the todo
+    const todoIndex = this.state.todos.findIndex(obj => obj.id === _todoId)
+    let todo = this.state.todos[todoIndex];
+    todo[_field] = _value;
+
+    const uri = `${this.apiBaseUri}/todos/${todo.id}`;
     const requestOptions = {
       method:  'PUT',
       headers: {'Content-Type': 'application/json'},
-      body:    JSON.stringify({description: _value})
+      body:    JSON.stringify({[_field]: _value})
     };
 
     let response = await fetch(uri, requestOptions);
@@ -87,7 +100,11 @@ class App extends Component {
     if (json.errors) {
       this.setState({errorMessage: json.errors[0].detail})
     } else {
-      this.setState({successMessage: `Successfully updated ${this.state.description}!`,})
+      // Loop through Todos and replace todo with updated todo
+      const newTodos = this.state.todos
+      newTodos.splice(todoIndex, 1, json.data)
+      this.setState({todos: newTodos})
+      this.setState({successMessage: `Successfully updated ${todo.description}!`,})
     }
   }
 
@@ -111,8 +128,7 @@ class App extends Component {
           todos:          this.state.todos.filter(todo => {
             return todo.id !== todoId
           }),
-          successMessage: `Successfully removed ${todo.attributes.description}!`,
-          description:    null
+          successMessage: `Successfully removed ${todo.attributes.description}!`
         }
       )
     })
@@ -174,6 +190,7 @@ class App extends Component {
 
         <TodoForm
           description={this.state.description}
+          priority={this.state.priority}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
         />

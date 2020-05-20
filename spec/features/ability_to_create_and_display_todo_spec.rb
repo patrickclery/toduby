@@ -25,22 +25,27 @@ RSpec.describe "Ability to create, display, and delete a todo item", type: :feat
     # On the same page, we can create a new Todo
     expect(page).to have_content("New Todo")
 
-    fill_in "formDescription", with: "Run 5km"
+    fill_in "Description", with: "Run 5km"
+    select "Med", from: "Priority"
+
     click_button "Submit"
     # Async javascript calls the API, creates a new Todo, then React adds it to the list
     expect(page).to have_content(/success/i)
     expect(page).to have_content("Run 5km")
+    expect(page).to have_content("Med")
 
     # Hover over the element so the button appears
-    page.find("div[editext='view']", text: "Run 5km").hover
-    # Click the pencil button
-    page.find("button[editext='edit-button']").click
-    # Change the description
-    page.find("input[editext='input']").fill_in with: "Run 10km"
-    # Click save
-    page.find("button[editext='save-button']").click
-    # Mark it off as completed
-    within("tr", text: "Run 10km") do
+    within("tr", text: "Run 5km") do
+      page.find("div[editext='view']").hover
+      # Click the pencil button
+      page.find("button[editext='edit-button']").click
+      # Change the description
+      page.find("input[editext='input']").fill_in with: "Run 10km"
+      # Click save
+      page.find("button[editext='save-button']").click
+      # Change the priority
+      page.find("select").select "High"
+      # Mark it off as completed
       page.find("input[type='checkbox']").check
       # Delete it
       click_button "Delete"
