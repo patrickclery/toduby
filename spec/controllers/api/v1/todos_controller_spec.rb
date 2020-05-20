@@ -2,6 +2,13 @@
 
 RSpec.describe Api::V1::TodosController, type: :controller do
 
+  # Let! must be before `before`
+  let!(:user) { create(:user, id: 1) }
+  before(:each) do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @user                          ||= User.find(1)
+    sign_in @user
+  end
   let(:json) { JSON.parse(request.body) }
 
   # Freeze time
@@ -12,9 +19,9 @@ RSpec.describe Api::V1::TodosController, type: :controller do
     # Don't eager load these
     subject(:request) { get :index }
 
-    let!(:todo1) { create(:todo, id: 1, description: "Pickup laundry") }
-    let!(:todo2) { create(:todo, id: 2, description: "Brush teeth") }
-    let!(:todo3) { create(:todo, id: 3, description: "Feed cat") }
+    let!(:todo1) { create(:todo, user: user, id: 1, description: "Pickup laundry") }
+    let!(:todo2) { create(:todo, user: user, id: 2, description: "Brush teeth") }
+    let!(:todo3) { create(:todo, user: user, id: 3, description: "Feed cat") }
     let!(:todos) { [todo1, todo2, todo3] }
 
     it { should be_successful }
@@ -51,7 +58,8 @@ RSpec.describe Api::V1::TodosController, type: :controller do
                created_at:   DateTime.new(2020, 5, 4),
                priority:     2,
                updated_at:   DateTime.new(2020, 5, 4),
-               completed_at: nil
+               completed_at: nil,
+               user:         user
       end
       let(:expected_response) do
         {
@@ -85,7 +93,8 @@ RSpec.describe Api::V1::TodosController, type: :controller do
                created_at:   DateTime.new(2020, 5, 4),
                updated_at:   DateTime.new(2020, 5, 4),
                priority:     2,
-               completed_at: DateTime.new(2020, 5, 4)
+               completed_at: DateTime.new(2020, 5, 4),
+               user:         user
       end
       let(:expected_response) do
         {
@@ -112,7 +121,7 @@ RSpec.describe Api::V1::TodosController, type: :controller do
 
   ############################################################################
   describe "DELETE #destroy" do
-    let!(:todo_destroy) { create(:todo, id: 123) }
+    let!(:todo_destroy) { create(:todo, id: 123, user: user) }
     subject(:request) { delete(:destroy, params: { id: "123" }) }
 
     it { should have_http_status(:no_content) }

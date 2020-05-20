@@ -4,6 +4,10 @@ RSpec.describe Todo, type: :model do
 
   let!(:todo1) { create(:todo, description: "Pickup laundry") }
 
+  context "associations" do
+    it { should belong_to(:user) }
+  end
+
   context "schema" do
     it { should have_db_column(:completed_at).of_type(:datetime).with_options(null: true) }
     it { should have_db_column(:created_at).of_type(:datetime).with_options(null: false) }
@@ -20,12 +24,8 @@ RSpec.describe Todo, type: :model do
 
   describe "#completed=" do
     # Freeze time
-    before do
-      travel_to Time.local(2020, 5, 9)
-    end
-    after do
-      travel_back
-    end
+    before { travel_to Time.local(2020, 5, 9) }
+    after { travel_back }
 
     # Check that changing completed sets it to the current date
     it { expect { subject.completed = "1" }.to change { subject.completed_at&.strftime("%Y-%m-%d") }.from(nil).to("2020-05-09") }

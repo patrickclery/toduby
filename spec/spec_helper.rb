@@ -6,6 +6,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../config/environment", __dir__)
 
 require "support/rspec"
+require "support/devise"
 
 # Browser/Request related
 require "support/capybara"
