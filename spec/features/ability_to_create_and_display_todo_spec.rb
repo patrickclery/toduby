@@ -24,14 +24,13 @@ RSpec.describe "Ability to create, display, and delete a todo item", type: :feat
     expect(page).to have_content("Pickup laundry")
     expect(page).to have_content("Brush teeth")
     expect(page).to have_content("Feed cat")
-    expect(page).to have_content("Total of 3 items.")
     # On the same page, we can create a new Todo
-    expect(page).to have_content("New Todo")
+    expect(page).to have_content("Add a new task")
 
-    fill_in "Description", with: "Run 5km"
-    select "Med", from: "Priority"
+    fill_in "description", with: "Run 5km"
+    page.find("#formPriority").select "Med"
 
-    click_button "Submit"
+    click_button "Add"
     # Async javascript calls the API, creates a new Todo, then React adds it to the list
     expect(page).to have_content(/success/i)
     expect(page).to have_content("Run 5km")
@@ -48,11 +47,16 @@ RSpec.describe "Ability to create, display, and delete a todo item", type: :feat
       page.find("button[editext='save-button']").click
       # Change the priority
       page.find("select").select "High"
+    end
+
+    # Hover over the element so the button appears
+    within("tr", text: "Run 10km") do
       # Mark it off as completed
       page.find("input[type='checkbox']").check
       # Delete it
       click_button "Delete"
     end
+
     expect(page).to have_content(/removed/i)
     expect(page).not_to have_css("tr>td", text: "Run 10km")
   end

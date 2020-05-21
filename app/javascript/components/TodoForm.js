@@ -1,49 +1,58 @@
 import React from "react"
-import {Button, Card, Form} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap"
+import styled from "styled-components"
 
-class TodoForm extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+const TodoFormRow = styled.div`
+  width: auto;
+  grid-template-columns: auto minmax(auto, 100px) minmax(auto, 100px);
+  display: grid;
+  grid-column-gap: 10px;
+`
 
-  render() {
-    const {handleChange, handleSubmit, description, priority} = this.props;
-    return (
-      <React.Fragment>
-        <h1>New Todo</h1>
+const TodoFormDescription = styled.div`
+  display: grid;
+`
+const TodoFormPriority = styled.div`
+  display: grid;
+`
+const TodoFormButton = styled.div`
+  display: grid;
+`
 
-        <Card>
-          <Card.Body>
-            <Form
-              onSubmit={handleSubmit}
-              onChange={handleChange}>
-              <Form.Group controlId="formDescription">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  name="description"
-                  size="lg"
-                  type="text"
-                  placeholder="Describe the action you will do"
-                  value={description}/>
-              </Form.Group>
-              <Form.Group controlId="formPriority">
-                <Form.Label>Priority</Form.Label>
-                <Form.Control
-                  name="priority"
-                  as="select"
-                  defaultValue="0">
-                  <option value="0">Low</option>
-                  <option value="1">Medium</option>
-                  <option value="2">High</option>
-                </Form.Control>
-              </Form.Group>
-              <Button type="submit">Submit</Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      </React.Fragment>
-    );
-  }
+function TodoForm(props) {
+  const {handleChange, handleSubmit, description, priority} = props;
+  return (
+    <Form onSubmit={handleSubmit}
+          onChange={handleChange}>
+      <TodoFormRow>
+        <TodoFormDescription>
+          <Form.Control name="description"
+                        style={{width: 'auto'}}
+                        size="lg"
+                        type="text"
+                        placeholder="Type the task you'd like to do next here"
+                        value={description}/>
+        </TodoFormDescription>
+        <TodoFormPriority>
+          <Form.Control id="formPriority"
+                        name="priority"
+                        as="select"
+                        size="lg"
+                        defaultValue={priority}>
+            <option value="0">Low</option>
+            <option value="1">Medium</option>
+            <option value="2">High</option>
+          </Form.Control>
+        </TodoFormPriority>
+        <TodoFormButton>
+          <Button size="lg"
+                  type="submit"
+                  variant="success"
+          >Add</Button>
+        </TodoFormButton>
+      </TodoFormRow>
+    </Form>
+  );
 }
 
 export default TodoForm
