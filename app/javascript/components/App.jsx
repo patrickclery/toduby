@@ -1,12 +1,18 @@
 import React, {Component} from 'react'
-import {Alert, Jumbotron} from 'react-bootstrap';
-import TodoList from "./TodoList";
-import TodoForm from "./TodoForm";
+import {Container, Jumbotron} from 'react-bootstrap'
+import TaskTable from "./TaskTable"
+import TodoForm from "./TodoForm"
+import TodoToast from "./TodoToast"
+import styled from "styled-components"
+
+const StyledJumbotron = styled(Jumbotron)`
+  background-color: white;
+`
 
 class App extends Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       successMessage: null,
@@ -16,18 +22,18 @@ class App extends Component {
     }
 
     this.apiBaseUri = "/api/v1"
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleDestroy = this.handleDestroy.bind(this);
-    this.handleCheck = this.handleCheck.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleDestroy = this.handleDestroy.bind(this)
+    this.handleCheck = this.handleCheck.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
   }
 
-  async componentDidMount() {
-    const uri = `${this.apiBaseUri}/todos/`;
+  componentDidMount = async () => {
+    const uri = `${this.apiBaseUri}/todos/`
 
-    const response = await fetch(uri);
-    const json = await response.json();
+    const response = await fetch(uri)
+    const json = await response.json()
 
     // If we get an error, display the error message
     if (json.errors) {
@@ -39,7 +45,7 @@ class App extends Component {
           description: null,
           priority:    "0"
         }
-      );
+      )
     }
   }
 
@@ -48,9 +54,9 @@ class App extends Component {
   }
 
   async handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const uri = `${this.apiBaseUri}/todos/`;
+    const uri = `${this.apiBaseUri}/todos/`
     const requestOptions = {
       method:  'POST',
       headers: {'Content-Type': 'application/json'},
@@ -60,7 +66,7 @@ class App extends Component {
           priority:    this.state.priority
         }
       )
-    };
+    }
 
     const response = await fetch(uri, requestOptions)
     const json = await response.json()
@@ -83,17 +89,17 @@ class App extends Component {
   async handleUpdate(_field, _value, _todoId) {
     // Get the todo
     const todoIndex = this.state.todos.findIndex(obj => obj.id === _todoId)
-    let todo = this.state.todos[todoIndex];
-    todo.attributes[_field] = _value;
+    let todo = this.state.todos[todoIndex]
+    todo.attributes[_field] = _value
 
-    const uri = `${this.apiBaseUri}/todos/${todo.id}`;
+    const uri = `${this.apiBaseUri}/todos/${todo.id}`
     const requestOptions = {
       method:  'PUT',
       headers: {'Content-Type': 'application/json'},
       body:    JSON.stringify({[_field]: _value})
-    };
+    }
 
-    let response = await fetch(uri, requestOptions);
+    let response = await fetch(uri, requestOptions)
     const json = await response.json()
 
     // If we get an error, display the error message
@@ -165,39 +171,24 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container m-3">
-        <Jumbotron>
-          <h1>Todo App</h1>
-        </Jumbotron>
-
-        <TodoList
-          todos={this.state.todos}
-          handleDestroy={this.handleDestroy}
-          handleCheck={this.handleCheck}
-          handleUpdate={this.handleUpdate}
-        />
-
-        {this.state.successMessage &&
-        <Alert variant="success" onClose={() => this.setState({successMessage: null})} dismissible>
-          <Alert.Heading>Hooray!</Alert.Heading>
-          <p>{this.state.successMessage}</p>
-        </Alert>}
-        {this.state.errorMessage &&
-        <Alert variant="danger" onClose={() => this.setState({errorMessage: null})} dismissible>
-          <Alert.Heading>Uh-oh! Something went wrong...</Alert.Heading>
-          <p>{this.state.errorMessage}</p>
-        </Alert>}
-
-        <TodoForm
-          description={this.state.description}
-          priority={this.state.priority}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-        />
-      </div>
+      <Container style={{width: '700px'}}>
+        <TodoToast onClose={() => this.setState({successMessage: null})}
+                   successMessage={this.state.successMessage}/>
+        <StyledJumbotron>
+          <h1>Add a new task</h1>
+          <TodoForm description={this.state.description}
+                    handleChange={this.handleChange}
+                    handleSubmit={this.handleSubmit}
+                    priority={this.state.priority}/>
+        </StyledJumbotron>
+        <TaskTable todos={this.state.todos}
+                   handleDestroy={this.handleDestroy}
+                   handleCheck={this.handleCheck}
+                   handleUpdate={this.handleUpdate}/>
+      </Container>
     )
   }
 }
 
-export default App;
+export default App
 
