@@ -1,7 +1,5 @@
 import React from "react"
 import * as PropTypes from "prop-types";
-import {Form} from "react-bootstrap";
-import EdiText from "react-editext";
 
 class TodoPriority extends React.Component {
   render() {
