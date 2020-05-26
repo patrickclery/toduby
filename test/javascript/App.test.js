@@ -1,21 +1,21 @@
 import React from 'react'
-import {shallow} from 'enzyme'
-import {beforeEach, describe, expect} from '@jest/globals';
 
 /* On spec/javascript/setupTests.js */
-import Enzyme from 'enzyme'
+import Enzyme, {render, mount, shallow} from 'enzyme'
 import EnzymeAdapter from 'enzyme-adapter-react-16'
 
 Enzyme.configure({adapter: new EnzymeAdapter()})
+import 'react-test-renderer'
 
-import {enableFetchMocks, FetchMock} from 'jest-fetch-mock'
-
-enableFetchMocks()
+import 'jest-fetch-mock'
 
 import App from '../../app/javascript/components/App.jsx'
+import fetchMock from "jest-fetch-mock";
+import TodoItem from "../../app/javascript/components/TodoItem";
 
 describe('<App />', () => {
-  beforeEach(() => {
+
+  it('fetches the list of todos', () => {
     // if you have an existing `beforeEach` just add the following line to it
     const stubData = [
       {
@@ -24,7 +24,7 @@ describe('<App />', () => {
         "attributes": {
           "description": "Brush teeth",
           "priority":    "0",
-          "completedAt": nil,
+          "completedAt": null,
           "createdAt":   "2020-03-03",
           "updatedAt":   "2020-03-03"
         }
@@ -35,7 +35,7 @@ describe('<App />', () => {
         "attributes": {
           "description": "Feed cat",
           "priority":    "1",
-          "completedAt": nil,
+          "completedAt": null,
           "createdAt":   "2020-03-03",
           "updatedAt":   "2020-03-03"
         }
@@ -52,11 +52,10 @@ describe('<App />', () => {
         }
       }
     ]
-    fetch.mockResponse(JSON.stringify({data: stubData}))
-  })
+    fetchMock.enableMocks()
+    fetchMock.mockResponse(JSON.stringify({data: stubData}))
 
-  it('fetches the list of todos', () => {
-    const wrapper = shallow(<App/>); // 5
-    expect(wrapper.find('tbody>tr>td')).toHaveLength(3)
+    const wrapper = mount(<App/>); // 5
+    expect(wrapper.find(TodoItem)).toHaveLength(3)
   })
 })

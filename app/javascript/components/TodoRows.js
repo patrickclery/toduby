@@ -6,7 +6,8 @@ function TodoRows(props) {
   return (
     todos && todos.map(
       todo =>
-        <TodoItem todo={todo}
+        <TodoItem key={todo.id}
+                  todo={todo}
                   handleDestroy={handleDestroy}
                   handleCheck={handleCheck}
                   handleUpdate={handleUpdate}/>

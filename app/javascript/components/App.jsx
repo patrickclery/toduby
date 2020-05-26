@@ -28,10 +28,10 @@ class App extends Component {
     this.handleUpdate = this.handleUpdate.bind(this)
   }
 
-  async componentDidMount() {
-    // let uri = `${this.apiBaseUri}/todos/`
+  componentDidMount = async () => {
+    let uri = `${this.apiBaseUri}/todos/`
 
-    const response = await fetch("/api/v1/todos")
+    const response = await fetch(uri)
     const json = await response.json()
 
     // If we get an error, display the error message
@@ -46,7 +46,7 @@ class App extends Component {
         }
       )
     }
-  }
+  };
 
   async handleChange(event) {
     this.setState({[event.target.name]: event.target.value})
@@ -154,7 +154,7 @@ class App extends Component {
                     handleSubmit={this.handleSubmit}
                     priority={this.state.priority}/>
         </StyledJumbotron>
-        <TaskTable todos={this.state.todos || []}
+        <TaskTable todos={this.state.todos}
                    handleCheck={this.handleCheck}
                    handleUpdate={this.handleUpdate}/>
       </Container>
