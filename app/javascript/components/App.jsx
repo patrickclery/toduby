@@ -22,7 +22,7 @@ class App extends Component {
       todos:          []
     }
 
-    this.apiBaseUri = `${props.apiUrl}/api/v1`
+    this.apiBaseUri = `http://billy.local/api/v1`
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleDestroy = this.handleDestroy.bind(this)
@@ -30,11 +30,12 @@ class App extends Component {
     this.handleUpdate = this.handleUpdate.bind(this)
   }
 
-  componentDidMount = async () => {
+  async componentDidMount() {
     const uri = `${this.apiBaseUri}/todos/`
 
     const response = await fetch(uri)
     const json = await response.json()
+    console.log(json)
 
     // If we get an error, display the error message
     if (json.errors) {

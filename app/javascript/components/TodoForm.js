@@ -31,7 +31,7 @@ function TodoForm(props) {
                         size="lg"
                         type="text"
                         placeholder="Type the task you'd like to do next here"
-                        value={description}/>
+                        defaultValue={description}/>
         </TodoFormDescription>
         <TodoFormPriority>
           <Form.Control id="formPriority"

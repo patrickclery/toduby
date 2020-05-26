@@ -11,10 +11,12 @@ const StyledTable = styled(Table)`
 function TaskTable(props) {
   return <StyledTable bordered hover>
     <thead>
-      <th>&nbsp;</th>
-      <th>Description</th>
-      <th>Priority</th>
-      <th>&nbsp;</th>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>&nbsp;</th>
+      </tr>
     </thead>
     <tbody>
       <TodoRows
