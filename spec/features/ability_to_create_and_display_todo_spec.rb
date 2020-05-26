@@ -1,26 +1,55 @@
 # frozen_string_literal: true
 
-RSpec.describe "Ability to create, display, and delete a todo item", type: :feature, js: true do
-  # Let! must be before `before`
+RSpec.describe "Ability to create, display, and delete a todo item",
+               type:  :feature,
+               js:    true,
+               billy: true do
+
+
   let!(:user) { create(:user, id: 1) }
   before(:each) do
     @user ||= User.find(1)
     login_as(@user)
   end
+
   let(:json) { JSON.parse(request.body) }
 
-  # Freeze time
-  before { travel_to Time.local(2020, 5, 9) }
-  after { travel_back }
-
-  let!(:todo1) { create(:todo, user: user, description: "Pickup laundry", created_at: DateTime.new(2020, 3, 3)) }
-  let!(:todo2) { create(:todo, user: user, description: "Brush teeth", created_at: DateTime.new(2020, 3, 3)) }
-  let!(:todo3) { create(:todo, user: user, description: "Feed cat", created_at: DateTime.new(2020, 3, 3)) }
+  let!(:json_stub) do
+    [
+      { "id":         "1",
+        "type":       "todo",
+        "attributes": { "description": "Brush teeth",
+                        "priority":    "0",
+                        "completedAt": nil,
+                        "createdAt":   "2020-03-03",
+                        "updatedAt":   "2020-03-03" }
+      },
+      { "id":         "2",
+        "type":       "todo",
+        "attributes": { "description": "Feed cat",
+                        "priority":    "1",
+                        "completedAt": nil,
+                        "createdAt":   "2020-03-03",
+                        "updatedAt":   "2020-03-03" }
+      },
+      { "id":         "3",
+        "type":       "todo",
+        "attributes": { "description": "Pickup laundry",
+                        "priority":    "0",
+                        "completedAt": "2020-05-09",
+                        "createdAt":   "2020-03-03",
+                        "updatedAt":   "2020-03-03" } }
+    ]
+  end
 
   it "creates and displays a todo item" do
+    allow_any_instance_of(DefaultController).to receive(:test_with_billy?).and_return(true)
+    stub = proxy.stub("http://billy.local/api/v1/todos/")
+                .and_return(json: { data: json_stub.to_json })
     # Single-page app, so everything resides at / or in the API /api/v1
     visit "/"
 
+    expect(page).to have_content("Add a new task")
     expect(page).to have_content("Pickup laundry")
     expect(page).to have_content("Brush teeth")
     expect(page).to have_content("Feed cat")

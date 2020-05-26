@@ -4,6 +4,7 @@ import TaskTable from "./TaskTable"
 import TodoForm from "./TodoForm"
 import TodoToast from "./TodoToast"
 import styled from "styled-components"
+import * as PropTypes from "prop-types";
 
 const StyledJumbotron = styled(Jumbotron)`
   background-color: white;
@@ -21,7 +22,7 @@ class App extends Component {
       todos:          []
     }
 
-    this.apiBaseUri = "/api/v1"
+    this.apiBaseUri = `${props.apiUrl}/api/v1`
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleDestroy = this.handleDestroy.bind(this)
@@ -189,6 +190,10 @@ class App extends Component {
     )
   }
 }
+
+App.propTypes = {
+  apiUrl: PropTypes.string
+};
 
 export default App
 

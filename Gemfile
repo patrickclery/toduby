@@ -32,6 +32,8 @@ group :test do
   gem "factory_bot", "~> 5.2"
   gem "factory_bot_rails", "~> 5.2"
   gem "faker", "~> 2.11"
+  gem "multi_json", "~> 1.14"
+  gem "puffing-billy", "~> 2.3"
   gem "rspec", "~> 3.9"
   gem "rspec-core", "~> 3.9"
   gem "rspec-rails", "~> 4.0" # Needed for react-rails controller tests
@@ -41,8 +43,8 @@ group :test do
   gem "selenium-webdriver", "~> 3.142"
   gem "shoulda", "~> 3.6"
   gem "simplecov", "~> 0.18"
+  gem "table_print", "~> 1.5"
   gem "vcr", "~> 5.1"
   gem "webdrivers", "~> 4.3"
   gem "webmock", "~> 3.8"
 end
-
