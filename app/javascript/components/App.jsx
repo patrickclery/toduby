@@ -24,15 +24,14 @@ class App extends Component {
     this.apiBaseUri = "/api/v1"
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.handleDestroy = this.handleDestroy.bind(this)
     this.handleCheck = this.handleCheck.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
   }
 
-  componentDidMount = async () => {
-    const uri = `${this.apiBaseUri}/todos/`
+  async componentDidMount() {
+    // let uri = `${this.apiBaseUri}/todos/`
 
-    const response = await fetch(uri)
+    const response = await fetch("/api/v1/todos")
     const json = await response.json()
 
     // If we get an error, display the error message
@@ -114,32 +113,6 @@ class App extends Component {
     }
   }
 
-  async handleDestroy(event, todoId) {
-    event.preventDefault()
-
-    // Get the todo
-    const todo = this.state.todos.filter(obj => {
-      return obj.id === todoId
-    })[0]
-
-    const uri = `${this.apiBaseUri}/todos/${todo.id}`
-    const requestOptions = {
-      method:  'DELETE',
-      headers: {'Content-Type': 'application/json'}
-    }
-
-    fetch(uri, requestOptions).then(response => {
-      this.setState(
-        {
-          todos:          this.state.todos.filter(todo => {
-            return todo.id !== todoId
-          }),
-          successMessage: `Successfully removed ${todo.attributes.description}!`
-        }
-      )
-    })
-  }
-
   async handleCheck(event) {
     const id = event.target.value
     // Retrieve the Todo from the array of todos
@@ -181,8 +154,7 @@ class App extends Component {
                     handleSubmit={this.handleSubmit}
                     priority={this.state.priority}/>
         </StyledJumbotron>
-        <TaskTable todos={this.state.todos}
-                   handleDestroy={this.handleDestroy}
+        <TaskTable todos={this.state.todos || []}
                    handleCheck={this.handleCheck}
                    handleUpdate={this.handleUpdate}/>
       </Container>

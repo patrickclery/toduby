@@ -11,10 +11,12 @@ const StyledTable = styled(Table)`
 function TaskTable(props) {
   return <StyledTable bordered hover>
     <thead>
-      <th>&nbsp;</th>
-      <th>Description</th>
-      <th>Priority</th>
-      <th>&nbsp;</th>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>&nbsp;</th>
+      </tr>
     </thead>
     <tbody>
       <TodoRows
@@ -29,14 +31,12 @@ function TaskTable(props) {
               let prioB = b.attributes.priority
               return (prioA < prioB) ? 1 : ((prioA > prioB) ? -1 : 0)
             })}
-        handleDestroy={props.handleDestroy}
         handleCheck={props.handleCheck}
         handleUpdate={props.handleUpdate}/>
       <TodoRows
         todos={
           props.todos
             .filter(todo => !!todo.attributes.completedAt)}
-        handleDestroy={props.handleDestroy}
         handleCheck={props.handleCheck}
         handleUpdate={props.handleUpdate}/>
     </tbody>
