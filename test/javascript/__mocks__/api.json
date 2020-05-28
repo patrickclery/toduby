@@ -1,0 +1,39 @@
+{
+  "todos": {
+    "data": [
+      {
+        "id":         "1",
+        "type":       "todo",
+        "attributes": {
+          "description": "Brush teeth",
+          "priority":    "0",
+          "completedAt": null,
+          "createdAt":   "2020-03-03",
+          "updatedAt":   "2020-03-03"
+        }
+      },
+      {
+        "id":         "2",
+        "type":       "todo",
+        "attributes": {
+          "description": "Feed cat",
+          "priority":    "1",
+          "completedAt": null,
+          "createdAt":   "2020-03-03",
+          "updatedAt":   "2020-03-03"
+        }
+      },
+      {
+        "id":         "3",
+        "type":       "todo",
+        "attributes": {
+          "description": "Pickup laundry",
+          "priority":    "0",
+          "completedAt": "2020-05-09",
+          "createdAt":   "2020-03-03",
+          "updatedAt":   "2020-03-03"
+        }
+      }
+    ]
+  }
+}

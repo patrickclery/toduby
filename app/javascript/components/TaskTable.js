@@ -31,12 +31,14 @@ function TaskTable(props) {
               let prioB = b.attributes.priority
               return (prioA < prioB) ? 1 : ((prioA > prioB) ? -1 : 0)
             })}
+        handleDestroy={props.handleDestroy}
         handleCheck={props.handleCheck}
         handleUpdate={props.handleUpdate}/>
       <TodoRows
         todos={
           props.todos
             .filter(todo => !!todo.attributes.completedAt)}
+        handleDestroy={props.handleDestroy}
         handleCheck={props.handleCheck}
         handleUpdate={props.handleUpdate}/>
     </tbody>
@@ -44,7 +46,7 @@ function TaskTable(props) {
 }
 
 TaskTable.propTypes = {
-  todos:         PropTypes.any,
+  todos:         PropTypes.array,
   handleDestroy: PropTypes.func,
   handleCheck:   PropTypes.func,
   handleUpdate:  PropTypes.func,

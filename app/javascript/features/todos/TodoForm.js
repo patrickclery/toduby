@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import {Button, Form} from "react-bootstrap"
 import styled from "styled-components"
 
@@ -19,10 +19,15 @@ const TodoFormButton = styled.div`
   display: grid;
 `
 
-function TodoForm(props) {
-  const {handleChange, handleSubmit, description, priority} = props;
+const TodoForm = ({createTask}) => {
+  const {handleSubmit, priority} = props;
+
+  const [description, setDescription] = useState(null)
+
+  const handleChange = e => setDescription(e.target.value)
+
   return (
-    <Form onSubmit={handleSubmit}
+    <Form onSubmit={createTask}
           onChange={handleChange}>
       <TodoFormRow>
         <TodoFormDescription>
@@ -53,6 +58,11 @@ function TodoForm(props) {
       </TodoFormRow>
     </Form>
   );
-}
+};
 
-export default TodoForm
+
+const mapDispatch = {TodoForm}
+export default connect(
+  null,
+  mapDispatch
+)(TodoForm)

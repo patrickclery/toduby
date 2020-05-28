@@ -1,23 +1,26 @@
-import React from 'react'
-
-/* On spec/javascript/setupTests.js */
-import Enzyme, {render, mount, shallow} from 'enzyme'
-import EnzymeAdapter from 'enzyme-adapter-react-16'
+import React from "react"
+import Enzyme, {mount, shallow} from "enzyme"
+import EnzymeAdapter from "enzyme-adapter-react-16"
 
 Enzyme.configure({adapter: new EnzymeAdapter()})
-import 'react-test-renderer'
 
-import 'jest-fetch-mock'
+// Rewires 'fetch' global to call 'fetchMock' instead of the real implementation
+import {enableFetchMocks} from "jest-fetch-mock"
 
-import App from '../../app/javascript/components/App.jsx'
-import fetchMock from "jest-fetch-mock";
-import TodoItem from "../../app/javascript/components/TodoItem";
+enableFetchMocks()
+
+import App from "../../app/javascript/components/App.jsx"
+import TodoItem from "../../app/javascript/components/TodoItem"
 
 describe('<App />', () => {
 
-  it('fetches the list of todos', () => {
-    // if you have an existing `beforeEach` just add the following line to it
-    const stubData = [
+  // Mock the API to return fake tasks list
+  beforeEach(() => {
+    fetch.mockResponse(JSON.stringify(stubData))
+  });
+
+  const stubData = {
+    "data": [
       {
         "id":         "1",
         "type":       "todo",
@@ -52,10 +55,12 @@ describe('<App />', () => {
         }
       }
     ]
-    fetchMock.enableMocks()
-    fetchMock.mockResponse(JSON.stringify({data: stubData}))
-
-    const wrapper = mount(<App/>); // 5
+  }
+  test('loads the todos after mounting', async () => {
+    const wrapper = await mount(<App/>);
+    await wrapper.instance().componentDidMount();
+    wrapper.update();
     expect(wrapper.find(TodoItem)).toHaveLength(3)
+    expect(wrapper.state('todos')).toHaveLength(3)
   })
 })
