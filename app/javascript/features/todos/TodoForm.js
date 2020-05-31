@@ -1,8 +1,10 @@
 import React, {useState} from "react"
 import {Button, Form} from "react-bootstrap"
 import styled from "styled-components"
+import {connect} from "react-redux"
+import {createTask} from './todosSlice'
 
-const TodoFormRow = styled.div`
+const TodoFormRow = styled.div` 
   width: auto;
   grid-template-columns: auto minmax(auto, 100px) minmax(auto, 100px);
   display: grid;
