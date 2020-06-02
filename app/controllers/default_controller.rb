@@ -5,7 +5,7 @@ class DefaultController < ApplicationController
 
   def index
     render component: "App",
-           props:     { apiUri: "/api/v1" },
+           props:     { baseUrl: "/api/v1" },
            layout:    "application",
            prerender: false
   end

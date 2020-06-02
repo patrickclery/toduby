@@ -26,12 +26,12 @@ const StyledRow = styled.tr`
   }
 `
 
-function TodoItem(props) {
+function TaskItem(props) {
   const {
           handleCheck,
           handleDestroy,
           handleUpdate,
-          todo: {
+          task: {
                   id,
                   attributes: {
                                 description,
@@ -95,4 +95,4 @@ function TodoItem(props) {
   );
 }
 
-export default TodoItem
+export default TaskItem

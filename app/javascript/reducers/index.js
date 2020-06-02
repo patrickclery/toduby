@@ -1,4 +1,4 @@
 import {combineReducers} from "@reduxjs/toolkit"
-import todosReducer from "../features/todos/todosSlice"
+import tasksReducer from "../features/tasks/tasksSlice"
 
-export default combineReducers({todos: todosReducer})
+export default combineReducers({tasks: tasksReducer})

@@ -11,6 +11,7 @@
     "babel-preset-env":                       "^1.7.0",
     "babel-preset-react":                     "^6.24.1",
     "bootstrap":                              "^4.4.1",
+    "browser-sync":                           "^2.26.7",
     "jquery":                                 "^3.5.0",
     "popper.js":                              "^1.16.1",
     "postcss":                                "^7.0.27",
@@ -22,10 +23,11 @@
     "react_ujs":                              "^2.6.1",
     "redux-thunk":                            "^2.3.0",
     "styled-components":                      "^5.1.0",
+    "tailwindcss":                            "^1.4.6",
     "webpack":                                "^4.42.1"
   },
   "scripts":         {
-    "test": "jest",
+    "test":       "jest",
     "test-watch": "jest --watch"
   },
   "jest":            {
@@ -44,6 +46,7 @@
   },
   "devDependencies": {
     "@jest/globals":                                 "^26.0.1",
+    "autoprefixer":                                  "^9.8.0",
     "babel-jest":                                    "^26.0.1",
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "chai":                                          "^4.2.0",

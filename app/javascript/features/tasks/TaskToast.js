@@ -2,12 +2,12 @@ import React from "react";
 import * as PropTypes from "prop-types";
 import {Toast} from "react-bootstrap";
 
-TodoToast.propTypes = {
+TaskToast.propTypes = {
   onClose:        PropTypes.func,
   successMessage: PropTypes.any
-};
+}
 
-function TodoToast(props) {
+function TaskToast(props) {
   return <div
     aria-live="polite"
     aria-atomic="true"
@@ -36,4 +36,4 @@ function TodoToast(props) {
   </div>;
 }
 
-export default TodoToast
+export default TaskToast

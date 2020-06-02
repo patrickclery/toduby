@@ -2,7 +2,7 @@ import React, {useState} from "react"
 import {Button, Form} from "react-bootstrap"
 import styled from "styled-components"
 import {connect} from "react-redux"
-import {createTask} from './todosSlice'
+import {createTask} from "./tasksSlice"
 
 const TodoFormRow = styled.div` 
   width: auto;
@@ -21,8 +21,8 @@ const TodoFormButton = styled.div`
   display: grid;
 `
 
-const TodoForm = ({createTask}) => {
-  const {handleSubmit, priority} = props;
+const TaskForm = ({createTask}) => {
+  const {handleSubmit, priority} = props
 
   const [description, setDescription] = useState(null)
 
@@ -62,9 +62,3 @@ const TodoForm = ({createTask}) => {
   );
 };
 
-
-const mapDispatch = {TodoForm}
-export default connect(
-  null,
-  mapDispatch
-)(TodoForm)
