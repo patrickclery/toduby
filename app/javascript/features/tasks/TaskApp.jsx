@@ -1,24 +1,15 @@
-import React, {Component} from "react"
+import React, {useEffect} from "react"
 import TaskTable from "./TaskTable"
 import {fetchTasks as fetchTasksReducer} from "./tasksSlice"
+import {useDispatch, useSelector} from "react-redux"
 
-export default TaskApp = props => {
+const TaskApp = props => {
   const baseUrl = props.baseUrl
-  const fetchTasks = () => {
-    fetchTasksReducer(baseUrl)
-  }
-
-  useEffect(() => {
-    fetchTasks()
-  })
+  const tasks = useSelector(state => state.tasks.entities)
 
   return (
-    <TaskTable todos={todos || []}/>
+    <TaskTable tasks={tasks}/>
   )
 }
 
-const mapPropsToState = state => {
-  return {
-    tasks: state.entities
-  }
-}
+export default TaskApp
