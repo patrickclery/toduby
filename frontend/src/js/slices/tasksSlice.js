@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
-import TasksApiClient from "./TasksApiClient"
+import TasksApiClient from "../components/TasksApiClient"
 
 // A Thunk creates the action and reducer, to be DRY
 export const fetchTasks = createAsyncThunk(

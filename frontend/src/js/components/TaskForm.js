@@ -2,7 +2,7 @@ import React from "react"
 import {Button, Form} from "react-bootstrap"
 import styled from "styled-components"
 import {useSelector} from "react-redux"
-import {createTask} from "./tasksSlice"
+import {createTask} from "../slices/tasksSlice"
 
 const TaskFormRow = styled.div` 
   width: auto;

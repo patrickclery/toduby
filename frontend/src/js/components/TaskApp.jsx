@@ -1,7 +1,7 @@
 import React, {useEffect} from "react"
 import TaskTable from "./TaskTable"
 import TaskForm from "./TaskForm"
-import {fetchTasks} from "./tasksSlice"
+import {fetchTasks} from "../slices/tasksSlice"
 import {useDispatch, useSelector} from "react-redux"
 
 const TaskApp = props => {

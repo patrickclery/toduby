@@ -1,11 +1,10 @@
-import React, {useEffect} from "react"
-import {Provider, useSelector, useDispatch} from "react-redux"
+import React from "react"
+import {Provider} from "react-redux"
 
 // Setup the Redux store and provider
 import {configureStore} from "@reduxjs/toolkit"
-import {fetchTasks as fetchTasksThunk} from "../features/tasks/tasksSlice"
 
-import TaskApp from "../features/tasks/TaskApp"
+import TaskApp from "./TaskApp"
 import rootReducer from "../reducers/index"
 
 const store = configureStore({reducer: rootReducer})
