@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 class Todo < ApplicationRecord
-  belongs_to :user
-
-  scope :by_user, lambda { |user|
-    where(user_id: user.id)
-  }
-
   attribute :description
   attribute :completed_at
   attribute :priority

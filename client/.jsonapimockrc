@@ -1,0 +1,6 @@
+  {
+    "port": 3004,
+    "watch": "./test/__mocks__/api.json",
+    "contentType": "application/json",
+    "accept": "*/*"
+  }

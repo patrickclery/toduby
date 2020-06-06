@@ -6,8 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-user = User.first || User.create(email: "test@test.com", password: "password", password_confirmation: "password")
-
-Todo.create({ user: user, priority: 0, description: "Pickup laundry" })
-Todo.create({ user: user, priority: 0, description: "Brush teeth", completed_at: DateTime.new(2020, 1, 4) })
-Todo.create({ user: user, priority: 1, description: "Feed cat" })
+Todo.create({ priority: 0, description: "Pickup laundry" })
+Todo.create({ priority: 0, description: "Brush teeth", completed_at: DateTime.new(2020, 1, 4) })
+Todo.create({ priority: 1, description: "Feed cat" })
