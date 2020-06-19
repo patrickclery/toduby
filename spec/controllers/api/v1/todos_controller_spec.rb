@@ -28,7 +28,11 @@ RSpec.describe Api::V1::TodosController, type: :controller do
     # Don't eager load these
     subject(:request) { post :create, params: params }
     let(:params) do
-      { description: "Run 5km", priority: "0" }
+      {
+        task: {
+          description: "Run 5km", priority: "0"
+        }
+      }
     end
 
     it { should be_successful }
@@ -44,7 +48,14 @@ RSpec.describe Api::V1::TodosController, type: :controller do
 
     ##########################################################################
     describe "mark as complete" do
-      let(:params) { { id: "4", completed: "1" } }
+      let(:params) do
+        {
+          id:   "4",
+          task: {
+            completed: "1"
+          }
+        }
+      end
       let!(:todo_incomplete) do
         create :todo,
                id:           4,
@@ -78,7 +89,14 @@ RSpec.describe Api::V1::TodosController, type: :controller do
 
     ##########################################################################
     describe "mark as incomplete" do
-      let(:params) { { id: "5", completed: "0" } }
+      let(:params) do
+        {
+          id:   "5",
+          task: {
+            completed: "0"
+          }
+        }
+      end
       let!(:todo_complete) do
         create :todo,
                id:           5,
