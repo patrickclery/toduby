@@ -4,10 +4,6 @@ RSpec.describe Todo, type: :model do
 
   let!(:todo1) { create(:todo, description: "Pickup laundry") }
 
-  context "associations" do
-    it { should belong_to(:user) }
-  end
-
   context "schema" do
     it { should have_db_column(:completed_at).of_type(:datetime).with_options(null: true) }
     it { should have_db_column(:created_at).of_type(:datetime).with_options(null: false) }
