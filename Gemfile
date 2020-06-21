@@ -6,7 +6,6 @@ ruby "~> 2.6.6"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", "~> 1.4"
-gem "brakeman", "~> 4.8"
 gem "fast_jsonapi", "~> 1.5"
 gem "foreman", "~> 0.87"
 gem "json", "~> 2.3"
@@ -19,7 +18,9 @@ group :development, :test do
 end
 
 group :development do
+  gem "annotate", "~> 3.1"
   gem "listen", "~> 3.2"
+  gem "pessimize", "~> 0.4"
   gem "spring", "~> 2.1"
   gem "spring-watcher-listen", "~> 2.0"
 end
@@ -39,3 +40,4 @@ group :test do
   gem "shoulda", "~> 3.6"
   gem "simplecov", "~> 0.18"
 end
+
