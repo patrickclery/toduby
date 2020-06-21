@@ -1,27 +1,17 @@
 import React from "react"
-import {Button, Form} from "react-bootstrap"
-import styled from "styled-components"
 import {useDispatch, useSelector} from "react-redux"
-import {createTask, changeTaskInput} from "../slices/tasksSlice"
+import {changeTaskInput, createTask} from "../slices/tasksSlice"
+import * as PropTypes from "prop-types"
+import {styled} from "twin.macro"
 
-const TaskFormRow = styled.div` 
+const Container = styled.div`
   width: auto;
   grid-template-columns: auto minmax(auto, 100px) minmax(auto, 100px);
   display: grid;
   grid-column-gap: 10px;
 `
 
-const TaskFormDescription = styled.div`
-  display: grid;
-`
-const TaskFormPriority = styled.div`
-  display: grid;
-`
-const TaskFormButton = styled.div`
-  display: grid;
-`
-
-const TaskForm = () => {
+function TaskForm() {
   const description = useSelector(state => state.tasks.task.description)
   const priority = useSelector(state => state.tasks.task.priority)
   const dispatch = useDispatch()
@@ -34,7 +24,6 @@ const TaskForm = () => {
     }
     dispatch(createTask(attributes))
   }
-
   // Assigns the value from a text/dropdown and assigns it to the respective task attribute
   const handleChange = async (event) => {
     const attribute = event.target.name.replace(/^todo\[(\w+)]$/, "$1")
@@ -45,37 +34,42 @@ const TaskForm = () => {
                              }))
   }
 
+  const DescriptionInput = props => <input
+    defaultValue={props.defaultValue}
+    name="todo[description]"
+    placeholder="Type the task you'd like to do next here"
+    tw="grid text-lg w-auto"
+    type="text"
+  />
+  DescriptionInput.propTypes = {defaultValue: PropTypes.string}
+
+  const PrioritySelect = props => <select
+    name="todo[priority]"
+    defaultValue={props.defaultValue}
+  >
+    <option value="0">Low</option>
+    <option value="1">Medium</option>
+    <option value="2">High</option>
+  </select>
+
+  PrioritySelect.propTypes = {defaultValue: PropTypes.any}
+
+  const SubmitButton = () => <button
+    tw="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+    type="submit"
+  >Create</button>
+
   return (
-    <Form
+    <form
       onSubmit={handleSubmit}
-      onChange={handleChange}>
-      <TaskFormRow>
-        <TaskFormDescription>
-          <Form.Control name="todo[description]"
-                        style={{width: "auto"}}
-                        size="lg"
-                        type="text"
-                        placeholder="Type the task you'd like to do next here"
-                        defaultValue={description}/>
-        </TaskFormDescription>
-        <TaskFormPriority>
-          <Form.Control name="todo[priority]"
-                        as="select"
-                        size="lg"
-                        defaultValue={priority}>
-            <option value="0">Low</option>
-            <option value="1">Medium</option>
-            <option value="2">High</option>
-          </Form.Control>
-        </TaskFormPriority>
-        <TaskFormButton>
-          <Button size="lg"
-                  type="submit"
-                  variant="success"
-          >Add</Button>
-        </TaskFormButton>
-      </TaskFormRow>
-    </Form>
+      onChange={handleChange}
+    >
+      <Container>
+        <DescriptionInput defaultValue={description} />
+        <PrioritySelect defaultValue={priority} />
+        <SubmitButton />
+      </Container>
+    </form>
   )
 }
 
