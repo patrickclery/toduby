@@ -90,7 +90,6 @@ GEM
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
     json (2.3.0)
-    jwt (2.2.1)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -222,7 +221,7 @@ GEM
     url (0.3.2)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.4)
+    websocket-extensions (0.1.5)
     zeitwerk (2.3.0)
 
 PLATFORMS
@@ -239,7 +238,6 @@ DEPENDENCIES
   fast_jsonapi (~> 1.5)
   foreman (~> 0.87)
   json (~> 2.3)
-  jwt (~> 2.2)
   listen (~> 3.2)
   pessimize (~> 0.4)
   pg (~> 1.2)
