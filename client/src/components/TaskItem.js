@@ -2,12 +2,33 @@ import React from "react"
 import EdiText from "react-editext"
 import {useDispatch} from "react-redux"
 import {destroyTask, removeTask, updateTask} from "../slices/tasksSlice"
+import tw, {styled} from "twin.macro"
+
+const StyledEdiText = styled(EdiText)`
+  div[editext="view-container"] {
+    ${tw`
+      font-bold
+      font-serif
+      ml-3 mr-3
+      text-lg
+    `}
+  }
+`
 
 const TaskItem = props => {
 
   const {task: {id, attributes}} = props
   const {description, completedAt, priority} = attributes
   const dispatch = useDispatch()
+
+  const Container = tw.div`
+    gap-3
+    mt-2
+    mb-2
+    grid
+    grid-cols-6
+    max-w-screen-sm
+  `
 
   /**
    * @description Dispatches an updated version of the task for update. This is used for all
@@ -25,32 +46,26 @@ const TaskItem = props => {
                           attributes: newAttributes
                         }))
   }
-  const DescriptionInput = () =>
-    <EdiText
+
+
+  const Description = () =>
+    <StyledEdiText
       cancelOnEscape
       completedAt={completedAt}
       onSave={value => handleUpdate("description", value)}
       showButtonsOnHover
       submitOnEnter
       submitOnUnfocus
+      tw="grid col-span-3"
       type="text"
       validation={value => value.length >= 3}
       validationMessage="Please type at least 3 characters."
       value={description}
-      viewProps={{
-        style: !!completedAt
-                 ? {textDecoration: "line-through"}
-                 : {
-            fontSize:   "x-large",
-            fontWeight: "bold",
-            fontFamily: "serif"
-          }
-      }}
     />
   const PrioritySelect = () =>
     <select
       name="priority-select"
-      onChange={({target: {value}}) => handleUpdate("priority", value)}
+      onChange={e => handleUpdate("priority", e.target.value)}
       value={priority}
     >
       <option value="0">Low</option>
@@ -91,7 +106,7 @@ const TaskItem = props => {
                           attributes: newAttributes
                         }))
   }
-  const CompletedCheckbox = () =>
+  const Checkbox = () =>
     <input
       checked={!!completedAt}
       onChange={e => {
@@ -99,28 +114,21 @@ const TaskItem = props => {
         handleToggle()
       }}
       type="checkbox"
+      tw="
+        grid
+        col-span-2
+      "
       value={id}
     />
 
-  return (
-    <tr
-      key={id}
-      className={!!completedAt ? "complete" : "incomplete"}
-    >
-      <td>
-        <CompletedCheckbox />
-      </td>
-      <td>
-        <DescriptionInput />
-      </td>
-      <td>
-        <PrioritySelect />
-      </td>
-      <td>
-        <DeleteButton />
-      </td>
-    </tr>
-  )
+  return <Container>
+    <div tw="grid flex items-center col-span-3 gap-3">
+      <Checkbox />
+      <Description />
+    </div>
+    <PrioritySelect />
+    <DeleteButton />
+  </Container>
 }
 
 export default TaskItem

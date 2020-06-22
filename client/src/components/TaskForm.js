@@ -9,7 +9,15 @@ function TaskForm() {
   const priority = useSelector(state => state.tasks.task.priority)
   const dispatch = useDispatch()
 
-  const Container = tw.div`max-w-screen-sm grid grid-cols-5 gap-2`
+  const Container = tw.div`
+    border
+    border-black
+    gap-2
+    grid
+    grid-cols-5
+    max-w-screen-sm
+    mb-10
+  `
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -33,14 +41,27 @@ function TaskForm() {
     defaultValue={props.defaultValue}
     name="todo[description]"
     placeholder="Type something (example: 'Do fifty pushups')"
-    tw="grid col-span-3 text-sm w-auto"
+    tw="
+      col-span-3
+      grid
+      placeholder-gray-500
+      px-3
+      rounded
+      text-sm
+      w-auto
+    "
     type="text"
   />
   DescriptionInput.propTypes = {defaultValue: PropTypes.string}
 
   const PrioritySelect = props => <select
     name="todo[priority]"
-    tw="text-lg grid col-span-1"
+    tw="
+      col-span-1
+      grid
+      px-3
+      text-lg
+    "
     defaultValue={props.defaultValue}
   >
     <option value="0">Low</option>
@@ -50,7 +71,20 @@ function TaskForm() {
   PrioritySelect.propTypes = {defaultValue: PropTypes.number}
 
   const SubmitButton = () => <button
-    tw="col-span-1 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+    tw="
+      bg-teal-500
+      border-4
+      border-teal-500
+      col-span-1
+      font-bold
+      hover:bg-teal-700
+      hover:border-teal-700
+      px-2
+      py-1
+      rounded-lg
+      text-sm
+      text-white
+    "
     type="submit"
   >Create</button>
 

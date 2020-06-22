@@ -2,6 +2,7 @@ import React, {useEffect} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {fetchTasks} from "../slices/tasksSlice"
 import TaskItem from "./TaskItem"
+import tw from "twin.macro"
 
 const TaskTable = () => {
 
@@ -44,20 +45,10 @@ const TaskTable = () => {
       return descA < descB
     })
 
-  return <table>
-    <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Description</th>
-        <th>Priority</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      <TaskItems tasks={incompleteTasks} />
-      <TaskItems tasks={completeTasks} />
-    </tbody>
-  </table>
+  return <>
+    <TaskItems tasks={incompleteTasks} />
+    <TaskItems tasks={completeTasks} />
+  </>
 }
 
 export default TaskTable
