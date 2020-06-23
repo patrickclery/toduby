@@ -10,9 +10,19 @@ const EdiTextStyled = styled(EdiText)`
     ${tw`
       font-bold
       font-serif
-      ml-3 mr-3
+      mx-3
       text-lg
     `}
+    ${props =>
+      !!props.isComplete
+        // Styles applied to completed items
+        && tw`
+          font-normal
+          italic
+          line-through
+          opacity-50
+          `
+    }
   }
 `
 
@@ -52,11 +62,11 @@ const TaskItem = props => {
                         }))
   }
 
-  const Description = ({completedAt, onSave, description}) => {
+  const Description = ({isComplete, onSave, description}) => {
 
     return <EdiTextStyled
       cancelOnEscape
-      completedAt={completedAt}
+      isComplete={isComplete}
       onSave={onSave}
       showButtonsOnHover
       submitOnEnter
@@ -83,9 +93,9 @@ const TaskItem = props => {
     flex
     items-center
   `
-  const Checkbox = ({isCompleted, value, onChange}) =>
+  const Checkbox = ({isComplete, value, onChange}) =>
     <input
-      checked={isCompleted}
+      checked={isComplete}
       type="checkbox"
       tw="
         col-span-2
@@ -134,7 +144,7 @@ const TaskItem = props => {
     <Container>
       <DescriptionColumn>
         <Checkbox
-          isCompleted={!!completedAt}
+          isComplete={!!completedAt}
           onChange={e => {
             e.preventDefault()
             handleToggle()
@@ -142,7 +152,7 @@ const TaskItem = props => {
           value={id}
         />
         <Description
-          completedAt={!!completedAt}
+          isComplete={!!completedAt}
           {...{description}}
           onSave={value => handleUpdate(id, "description", value)}
         />
