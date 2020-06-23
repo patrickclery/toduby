@@ -14,14 +14,7 @@ const StyledEdiText = styled(EdiText)`
     `}
   }
 `
-
-const TaskItem = props => {
-
-  const {task: {id, attributes}} = props
-  const {description, completedAt, priority} = attributes
-  const dispatch = useDispatch()
-
-  const Container = tw.div`
+const Container = tw.div`
     gap-3
     mt-2
     mb-2
@@ -29,6 +22,12 @@ const TaskItem = props => {
     grid-cols-5
     max-w-screen-sm
   `
+
+const TaskItem = props => {
+
+  const {task: {id, attributes}} = props
+  const {description, completedAt, priority} = attributes
+  const dispatch = useDispatch()
 
   /**
    * @description Dispatches an updated version of the task for update. This is used for all
@@ -68,7 +67,7 @@ const TaskItem = props => {
     >Delete</button>
 
   const Description = () =>
-    <EdiText
+    <StyledEdiText
       cancelOnEscape
       completedAt={completedAt}
       onSave={value => handleUpdate(id, "description", value)}
