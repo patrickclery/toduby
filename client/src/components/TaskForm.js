@@ -3,23 +3,22 @@ import {useDispatch, useSelector} from "react-redux"
 import {changeTaskInput, createTask} from "../slices/tasksSlice"
 import tw from "twin.macro"
 
-// Styled components must be created outside of functional/rendered components or a warning will
-// appear
 export const Container = tw.div`
-    border
-    border-black
-    gap-2
-    grid
-    grid-cols-5
-    max-w-screen-sm
-    mb-10
-  `
+  border
+  border-black
+  gap-2
+  grid
+  grid-cols-5
+  max-w-screen-sm
+  mb-10
+`
 
-export const DescriptionInput = props => <input
-  defaultValue={props.defaultValue}
-  name="todo[description]"
-  placeholder="Type something (example: 'Do fifty pushups')"
-  tw="
+export const DescriptionInput = ({defaultValue}) =>
+  <input
+    defaultValue={defaultValue}
+    name="todo[description]"
+    placeholder="Type something (example: 'Do fifty pushups')"
+    tw="
       col-span-3
       grid
       placeholder-gray-500
@@ -28,26 +27,28 @@ export const DescriptionInput = props => <input
       text-sm
       w-auto
     "
-  type="text"
-/>
+    type="text"
+  />
 
-export const PrioritySelect = props => <select
-  name="todo[priority]"
-  defaultValue={props.defaultValue}
-  tw="
+export const PrioritySelect = ({defaultValue}) =>
+  <select
+    defaultValue={defaultValue}
+    name="todo[priority]"
+    tw="
       col-span-1
       grid
       px-3
       text-lg
     "
->
-  <option value="0">Low</option>
-  <option value="1">Medium</option>
-  <option value="2">High</option>
-</select>
+  >
+    <option value="0">Low</option>
+    <option value="1">Medium</option>
+    <option value="2">High</option>
+  </select>
 
-export const SubmitButton = () => <button
-  tw="
+export const SubmitButton = () =>
+  <button
+    tw="
       bg-teal-500
       border-4
       border-teal-500
@@ -61,8 +62,8 @@ export const SubmitButton = () => <button
       text-sm
       text-white
     "
-  type="submit"
->Create</button>
+    type="submit"
+  >Create</button>
 
 export const TaskForm = () => {
   const description = useSelector(state => state.tasks.task.description)

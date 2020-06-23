@@ -4,7 +4,8 @@ import {useDispatch} from "react-redux"
 import {destroyTask, removeTask, updateTask} from "../slices/tasksSlice"
 import tw, {styled} from "twin.macro"
 
-const StyledEdiText = styled(EdiText)`
+// This was showing as undefined when I put it in the function scope so it has to be up here for now
+const EdiTextStyled = styled(EdiText)`
   div[editext="view-container"] {
     ${tw`
       font-bold
@@ -14,14 +15,6 @@ const StyledEdiText = styled(EdiText)`
     `}
   }
 `
-const Container = tw.div`
-    gap-3
-    mt-2
-    mb-2
-    grid
-    grid-cols-5
-    max-w-screen-sm
-  `
 
 const TaskItem = props => {
 
@@ -44,57 +37,10 @@ const TaskItem = props => {
                           }
                         }))
   }
-
-  /**
-   * @description Destroys the current task
-   */
-  const handleDestroy = () => {
+  const handleDestroy = ({id}) => {
     dispatch(destroyTask({id}))
-    dispatch(removeTask({
-                          id,
-                          attributes
-                        }))
+    dispatch(removeTask({id}))
   }
-
-  const DeleteButton = () =>
-    <button
-      tw="bg-red-500 border-4 border-red-500 flex-shrink-0 hover:bg-red-700 hover:border-red-700 px-2 py-1 rounded text-sm text-white"
-      onClick={e => {
-        e.preventDefault()
-        handleDestroy()
-      }}
-      type="button"
-    >Delete</button>
-
-  const Description = () =>
-    <StyledEdiText
-      cancelOnEscape
-      completedAt={completedAt}
-      onSave={value => handleUpdate(id, "description", value)}
-      showButtonsOnHover
-      submitOnEnter
-      submitOnUnfocus
-      tw="grid col-span-3"
-      type="text"
-      validation={value => value.length >= 3}
-      validationMessage="Please type at least 3 characters."
-      value={description}
-    />
-  const PrioritySelect = () =>
-    <select
-      name="priority-select"
-      onChange={e => handleUpdate(id, "priority", e.target.value)}
-      value={priority}
-      tw="px-3"
-    >
-      <option value="0">Low</option>
-      <option value="1">Medium</option>
-      <option value="2">High</option>
-    </select>
-
-  /**
-   * @description This simply calls the update action, instead of doing its own
-   */
   const handleToggle = () => {
     const newAttributes = {
       ...attributes,
@@ -105,29 +51,114 @@ const TaskItem = props => {
                           attributes: newAttributes
                         }))
   }
-  const Checkbox = () =>
+
+  const Description = ({completedAt, onSave, description}) => {
+
+    return <EdiTextStyled
+      cancelOnEscape
+      completedAt={completedAt}
+      onSave={onSave}
+      showButtonsOnHover
+      submitOnEnter
+      submitOnUnfocus
+      tw="grid col-span-3"
+      type="text"
+      validation={value => value.length >= 3}
+      validationMessage="Please type at least 3 characters."
+      value={description}
+    />
+  }
+
+  const Container = tw.div`
+    gap-3
+    grid
+    grid-cols-5
+    max-w-screen-sm
+    mb-2
+    mt-2
+  `
+  const DescriptionColumn = tw.div`
+    col-span-3
+    gap-3
+    flex
+    items-center
+  `
+  const Checkbox = ({isCompleted, value, onChange}) =>
     <input
-      checked={!!completedAt}
-      onChange={e => {
-        e.preventDefault()
-        handleToggle()
-      }}
+      checked={isCompleted}
       type="checkbox"
       tw="
-        grid
         col-span-2
+        grid
       "
-      value={id}
+      {...{
+        onChange,
+        value
+      }}
     />
+  const PrioritySelect = ({onChange, value}) =>
+    <select
+      {...{
+        onChange,
+        value
+      }}
+      name="priority-select"
+      tw="
+        px-3
+      "
+    >
+      <option value="0">Low</option>
+      <option value="1">Medium</option>
+      <option value="2">High</option>
+    </select>
+  const DeleteButton = ({onClick}) =>
+    <button
+      {...{onClick}}
+      tw="
+        bg-red-500
+        border-4
+        border-red-500
+        flex-shrink-0
+        hover:bg-red-700
+        hover:border-red-700
+        px-2
+        py-1
+        rounded
+        text-sm
+        text-white
+      "
+      type="button"
+    >Delete</button>
 
-  return <Container>
-    <div tw="grid flex items-center col-span-3 gap-3">
-      <Checkbox />
-      <Description />
-    </div>
-    <PrioritySelect />
-    <DeleteButton />
-  </Container>
+  return (
+    <Container>
+      <DescriptionColumn>
+        <Checkbox
+          isCompleted={!!completedAt}
+          onChange={e => {
+            e.preventDefault()
+            handleToggle()
+          }}
+          value={id}
+        />
+        <Description
+          completedAt={!!completedAt}
+          {...{description}}
+          onSave={value => handleUpdate(id, "description", value)}
+        />
+      </DescriptionColumn>
+      <PrioritySelect
+        onChange={e => handleUpdate(id, "priority", e.target.value)}
+        value={priority}
+      />
+      <DeleteButton
+        onClick={e => {
+          e.preventDefault()
+          handleDestroy({id})
+        }}
+      />
+    </Container>
+  )
 }
 
 export default TaskItem
