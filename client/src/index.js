@@ -1,4 +1,5 @@
 import React from "react"
+import "./styles/tailwind.css"
 import ReactDOM from "react-dom"
 import App from "./components/App"
 import * as serviceWorker from "./serviceWorker"

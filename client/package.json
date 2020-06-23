@@ -1,8 +1,8 @@
 {
-  "name":         "client",
-  "version":      "0.1.0",
-  "private":      true,
-  "dependencies": {
+  "name":            "client",
+  "version":         "0.1.0",
+  "private":         true,
+  "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.1",
     "@babel/preset-env":                       "^7.10.2",
     "@babel/preset-react":                     "^7.10.1",
@@ -10,23 +10,36 @@
     "@testing-library/jest-dom":               "^4.2.4",
     "@testing-library/react":                  "^9.3.2",
     "@testing-library/user-event":             "^7.1.2",
+    "babel-plugin-macros":                     "^2.8.0",
     "dotenv":                                  "^8.2.0",
+    "emotion":                                 "^10.0.27",
+    "postcss":                                 "^7.0.32",
+    "postcss-cli":                             "^7.1.1",
     "react":                                   "^16.13.1",
-    "react-bootstrap":                         "^1.0.1",
     "react-dom":                               "^16.13.1",
     "react-editext":                           "^3.16.0",
+    "react-helmet":                            "^6.1.0",
     "react-redux":                             "^7.2.0",
     "react-scripts":                           "3.4.1",
     "redux":                                   "^4.0.5",
-    "styled-components":                       "^5.1.1"
+    "styled-components":                       "^5.1.1",
+    "tailwindcss":                             "^1.4.6",
+    "twin.macro":                              "^1.4.1"
   },
-  "scripts":      {
+  "scripts":         {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test":  "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
+  "eslintConfig":    {
     "extends": "react-app"
+  },
+  "babelMacros":     {
+    "twin": {
+      "preset":      "styled-components",
+      "config":      "src/tailwind.config.js",
+      "autoCssProp": true
+    }
   }
 }

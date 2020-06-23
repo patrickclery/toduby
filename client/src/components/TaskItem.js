@@ -1,30 +1,28 @@
 import React from "react"
-import {Button, Form} from "react-bootstrap"
 import EdiText from "react-editext"
-import styled from "styled-components"
 import {useDispatch} from "react-redux"
 import {destroyTask, removeTask, updateTask} from "../slices/tasksSlice"
+import tw, {styled} from "twin.macro"
 
-const StyledRow = styled.tr`
-  &.complete {
-    background-color: whitesmoke;
-  }
-  &.incomplete {
-    background-color: white;
-  }
-  .col-checkbox {
-    width: 40px;
-  }
-  &.complete .col-edit {
-    width: auto;
-  }
-  .col-priority {
-    text-align: center;
-    width: 100px;
-  }
-  .col-delete {
-    text-align: center;
-    width: 70px;
+// This was showing as undefined when I put it in the function scope so it has to be up here for now
+const EdiTextStyled = styled(EdiText)`
+  div[editext="view-container"] {
+    ${tw`
+      font-bold
+      font-serif
+      mx-3
+      text-lg
+    `}
+    ${props =>
+      !!props.isComplete
+        // Styles applied to completed items
+        && tw`
+          font-normal
+          italic
+          line-through
+          opacity-50
+          `
+    }
   }
 `
 
@@ -35,35 +33,24 @@ const TaskItem = props => {
   const dispatch = useDispatch()
 
   /**
-   * @description Dispatches an updated version of the task for update
+   * @description Dispatches an updated version of the task for update. This is used for all
+   * attributes, including the completed checkbox
+   * @param {number} id of the task
    * @param {object} attribute name to update
    * @param {object} value of the attribute
    */
-  const handleUpdate = (attribute, value) => {
-    const newAttributes = {
-      ...attributes,
-      [attribute]: value
-    }
+  const handleUpdate = (id, attribute, value) => {
     dispatch(updateTask({
                           id,
-                          attributes: newAttributes
+                          attributes: {
+                            [attribute]: value
+                          }
                         }))
   }
-
-  /**
-   * @description Destroys the current task
-   */
-  const handleDestroy = () => {
+  const handleDestroy = ({id}) => {
     dispatch(destroyTask({id}))
-    dispatch(removeTask({
-                          id,
-                          attributes
-                        }))
+    dispatch(removeTask({id}))
   }
-
-  /**
-   * @description This simply calls the update action, instead of doing its own
-   */
   const handleToggle = () => {
     const newAttributes = {
       ...attributes,
@@ -75,56 +62,112 @@ const TaskItem = props => {
                         }))
   }
 
+  const Description = ({isComplete, onSave, description}) => {
+
+    return <EdiTextStyled
+      cancelOnEscape
+      isComplete={isComplete}
+      onSave={onSave}
+      showButtonsOnHover
+      submitOnEnter
+      submitOnUnfocus
+      tw="grid col-span-3"
+      type="text"
+      validation={value => value.length >= 3}
+      validationMessage="Please type at least 3 characters."
+      value={description}
+    />
+  }
+
+  const Container = tw.div`
+    gap-3
+    grid
+    grid-cols-5
+    max-w-screen-sm
+    mb-2
+    mt-2
+  `
+  const DescriptionColumn = tw.div`
+    col-span-3
+    gap-3
+    flex
+    items-center
+  `
+  const Checkbox = ({isComplete, value, onChange}) =>
+    <input
+      checked={isComplete}
+      type="checkbox"
+      tw="
+        col-span-2
+        grid
+      "
+      {...{
+        onChange,
+        value
+      }}
+    />
+  const PrioritySelect = ({onChange, value}) =>
+    <select
+      {...{
+        onChange,
+        value
+      }}
+      name="priority-select"
+      tw="
+        px-3
+      "
+    >
+      <option value="0">Low</option>
+      <option value="1">Medium</option>
+      <option value="2">High</option>
+    </select>
+  const DeleteButton = ({onClick}) =>
+    <button
+      {...{onClick}}
+      tw="
+        bg-red-500
+        border-4
+        border-red-500
+        flex-shrink-0
+        hover:bg-red-700
+        hover:border-red-700
+        px-2
+        py-1
+        rounded
+        text-sm
+        text-white
+      "
+      type="button"
+    >Delete</button>
+
   return (
-    <StyledRow key={id} className={!!completedAt ? "complete" : "incomplete"}>
-      <td className="col-checkbox">
-        <Form.Control value={id}
-                      type="checkbox"
-                      checked={!!completedAt}
-                      onChange={e => {
-                        e.preventDefault()
-                        handleToggle()
-                      }}/>
-      </td>
-      <td style={{width: "auto"}} className="col-edit">
-        <EdiText
-          viewProps={{
-            style: !!completedAt
-                     ? {textDecoration: "line-through"}
-                     : {
-                fontSize:   "x-large",
-                fontWeight: "bold",
-                fontFamily: "serif"
-              }
-          }}
-          cancelOnEscape
-          onSave={value => handleUpdate("description", value)}
-          showButtonsOnHover
-          submitOnEnter
-          submitOnUnfocus
-          validation={value => value.length >= 3}
-          validationMessage="Please type at least 3 characters."
-          value={description}/>
-      </td>
-      <td className="col-priority">
-        <select
-          name="priority-select"
-          onChange={({target: {value}}) => handleUpdate("priority", value)}
-          value={priority}>
-          <option value="0">Low</option>
-          <option value="1">Medium</option>
-          <option value="2">High</option>
-        </select>
-      </td>
-      <td className="col-delete">
-        <Button
-          onClick={e => {
+    <Container>
+      <DescriptionColumn>
+        <Checkbox
+          isComplete={!!completedAt}
+          onChange={e => {
             e.preventDefault()
-            handleDestroy()
+            handleToggle()
           }}
-          className="btn-danger">Delete</Button>
-      </td>
-    </StyledRow>
+          value={id}
+        />
+        <Description
+          isComplete={!!completedAt}
+          {...{description}}
+          onSave={value => handleUpdate(id, "description", value)}
+        />
+      </DescriptionColumn>
+      <PrioritySelect
+        onChange={e => handleUpdate(id, "priority", e.target.value)}
+        value={priority}
+      />
+      <DeleteButton
+        onClick={e => {
+          e.preventDefault()
+          handleDestroy({id})
+        }}
+      />
+    </Container>
   )
 }
 

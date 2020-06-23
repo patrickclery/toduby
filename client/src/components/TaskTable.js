@@ -1,13 +1,8 @@
 import React, {useEffect} from "react"
-import {Table} from "react-bootstrap"
-import styled from "styled-components"
 import {useDispatch, useSelector} from "react-redux"
 import {fetchTasks} from "../slices/tasksSlice"
 import TaskItem from "./TaskItem"
-
-const StyledTable = styled(Table)`
-  background: white;
-`
+import tw from "twin.macro"
 
 const TaskTable = () => {
 
@@ -19,6 +14,18 @@ const TaskTable = () => {
     dispatch(fetchTasks())
   }, [dispatch])
 
+  /**
+   * @description Loops through the provided Tasks and renders them
+   * @constructor
+   */
+  const TaskItems = ({tasks}) => {
+    return tasks.map(
+      task =>
+        <TaskItem
+          key={task.id}
+          task={task}
+        />)
+  }
   // Sort by priority
   const incompleteTasks = tasks
     .filter(task => !task.attributes.completedAt)
@@ -38,22 +45,10 @@ const TaskTable = () => {
       return descA < descB
     })
 
-  return <StyledTable bordered hover>
-    <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Description</th>
-        <th>Priority</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>{
-      incompleteTasks.map(task => <TaskItem key={task.id} task={task}/>)
-    }{
-      completeTasks.map(task => <TaskItem key={task.id} task={task}/>)
-    }
-    </tbody>
-  </StyledTable>
+  return <>
+    <TaskItems tasks={incompleteTasks} />
+    <TaskItems tasks={completeTasks} />
+  </>
 }
 
 export default TaskTable

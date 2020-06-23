@@ -1,6 +1,3 @@
-const webpack = require("webpack")
-const path = require("path")
-
 module.exports = {
   entry:  "./src/index.js",
   module: {
@@ -13,8 +10,15 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/i,
-        use:  ["postcss-loader"]
+        test:    /\.css$/,
+        exclude: /node_modules/,
+        use:     [
+          "style-loader",
+          {loader:   "css-loader",
+            options: {importLoaders: 1}
+          },
+          "postcss-loader"
+        ]
       },
       {
         test:   /\.svg$/,

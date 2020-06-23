@@ -13,7 +13,6 @@ export const fetchTasks = createAsyncThunk(
     return response.json()
   }
 )
-
 export const createTask = createAsyncThunk(
   "tasks/createTask",
   async (attributes) => {
@@ -27,9 +26,6 @@ export const createTask = createAsyncThunk(
     return response.json()
   }
 )
-
-// Since we're updating one attribute at a time (description, priority, etc.) the best approach
-// is to omit any other attributes from the array. Rails
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({attributes, id}) => {
@@ -43,7 +39,6 @@ export const updateTask = createAsyncThunk(
     return response.json()
   }
 )
-
 export const destroyTask = createAsyncThunk(
   "tasks/destroyTask",
   async ({id}) => {
@@ -56,7 +51,6 @@ export const destroyTask = createAsyncThunk(
     return response.json()
   }
 )
-
 export const tasksSlice = createSlice(
   {
     name:          "tasks",
@@ -68,10 +62,9 @@ export const tasksSlice = createSlice(
         priority:    "0"
       }
     },
-    reducers:      {
-      changeTaskInput: (state, action) => {
-        const attribute = action.payload.attribute
-        state.task[attribute] = action.payload.value
+    reducers: {
+      changeTaskInput: (state, {payload: {attribute, value}}) => {
+        state.task[attribute] = value
       },
       // 1. Remove it from the collection
       // This doesn't trigger a "fulfilled", so using a synchronous regular reducer
@@ -96,14 +89,15 @@ export const tasksSlice = createSlice(
       },
 
       // Update collection with the new task
-      [updateTask.fulfilled]: (state, payload) => {
-        const findTaskIndex = taskId => {
-          return state.entities.findIndex(obj => obj.id === taskId)
-        }
-        const {id} = payload.data
-        const index = findTaskIndex(id)
+      [updateTask.fulfilled]: (state, {payload: {data}}) => {
 
-        state.entities[index] = payload.data
+        // Finds the ID of the task in the state
+        const findNeedleInHaystack = (haystack, needle) => {
+          return haystack.findIndex(obj => obj.id === needle)
+        }
+        const index = findNeedleInHaystack(state.entities, data.id)
+
+        state.entities[index] = data
       }
     }
   }
