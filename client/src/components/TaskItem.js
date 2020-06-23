@@ -26,33 +26,52 @@ const TaskItem = props => {
     mt-2
     mb-2
     grid
-    grid-cols-6
+    grid-cols-5
     max-w-screen-sm
   `
 
   /**
    * @description Dispatches an updated version of the task for update. This is used for all
    * attributes, including the completed checkbox
+   * @param {number} id of the task
    * @param {object} attribute name to update
    * @param {object} value of the attribute
    */
-  const handleUpdate = (attribute, value) => {
-    const newAttributes = {
-      ...attributes,
-      [attribute]: value
-    }
+  const handleUpdate = (id, attribute, value) => {
     dispatch(updateTask({
                           id,
-                          attributes: newAttributes
+                          attributes: {
+                            [attribute]: value
+                          }
                         }))
   }
 
+  /**
+   * @description Destroys the current task
+   */
+  const handleDestroy = () => {
+    dispatch(destroyTask({id}))
+    dispatch(removeTask({
+                          id,
+                          attributes
+                        }))
+  }
+
+  const DeleteButton = () =>
+    <button
+      tw="bg-red-500 border-4 border-red-500 flex-shrink-0 hover:bg-red-700 hover:border-red-700 px-2 py-1 rounded text-sm text-white"
+      onClick={e => {
+        e.preventDefault()
+        handleDestroy()
+      }}
+      type="button"
+    >Delete</button>
 
   const Description = () =>
-    <StyledEdiText
+    <EdiText
       cancelOnEscape
       completedAt={completedAt}
-      onSave={value => handleUpdate("description", value)}
+      onSave={value => handleUpdate(id, "description", value)}
       showButtonsOnHover
       submitOnEnter
       submitOnUnfocus
@@ -65,33 +84,14 @@ const TaskItem = props => {
   const PrioritySelect = () =>
     <select
       name="priority-select"
-      onChange={e => handleUpdate("priority", e.target.value)}
+      onChange={e => handleUpdate(id, "priority", e.target.value)}
       value={priority}
+      tw="px-3"
     >
       <option value="0">Low</option>
       <option value="1">Medium</option>
       <option value="2">High</option>
     </select>
-
-  /**
-   * @description Destroys the current task
-   */
-  const handleDestroy = () => {
-    dispatch(destroyTask({id}))
-    dispatch(removeTask({
-                          id,
-                          attributes
-                        }))
-  }
-  const DeleteButton = () =>
-    <button
-      tw="bg-red-500 border-4 border-red-500 flex-shrink-0 hover:bg-red-700 hover:border-red-700 px-2 py-1 rounded text-sm text-white"
-      onClick={e => {
-        e.preventDefault()
-        handleDestroy()
-      }}
-      type="button"
-    >Delete</button>
 
   /**
    * @description This simply calls the update action, instead of doing its own

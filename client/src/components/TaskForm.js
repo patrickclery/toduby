@@ -1,7 +1,6 @@
 import React from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {changeTaskInput, createTask} from "../slices/tasksSlice"
-import * as PropTypes from "prop-types"
 import tw, {styled} from "twin.macro"
 
 function TaskForm() {
@@ -52,7 +51,6 @@ function TaskForm() {
     "
     type="text"
   />
-  DescriptionInput.propTypes = {defaultValue: PropTypes.string}
 
   const PrioritySelect = props => <select
     name="todo[priority]"
@@ -68,7 +66,6 @@ function TaskForm() {
     <option value="1">Medium</option>
     <option value="2">High</option>
   </select>
-  PrioritySelect.propTypes = {defaultValue: PropTypes.number}
 
   const SubmitButton = () => <button
     tw="

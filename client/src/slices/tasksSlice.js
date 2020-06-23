@@ -69,9 +69,9 @@ export const tasksSlice = createSlice(
       }
     },
     reducers:      {
-      changeTaskInput: (state, action) => {
-        const attribute = action.payload.attribute
-        state.task[attribute] = action.payload.value
+      changeTaskInput: (state, {payload}) => {
+        const attribute = payload.attribute
+        state.task[attribute] = payload.value
       },
       // 1. Remove it from the collection
       // This doesn't trigger a "fulfilled", so using a synchronous regular reducer
@@ -96,14 +96,15 @@ export const tasksSlice = createSlice(
       },
 
       // Update collection with the new task
-      [updateTask.fulfilled]: (state, payload) => {
-        const findTaskIndex = taskId => {
-          return state.entities.findIndex(obj => obj.id === taskId)
-        }
-        const {id} = payload.data
-        const index = findTaskIndex(id)
+      [updateTask.fulfilled]: (state, {payload: {data}}) => {
 
-        state.entities[index] = payload.data
+        // Finds the ID of the task in the state
+        const findNeedleInHaystack = (haystack, needle) => {
+          return haystack.findIndex(obj => obj.id === needle)
+        }
+        const index = findNeedleInHaystack(state.entities, data.id)
+
+        state.entities[index] = data
       }
     }
   }
