@@ -10,7 +10,7 @@ gem "fast_jsonapi", "~> 1.5"
 gem "foreman", "~> 0.87.1"
 gem "json", "~> 2.3.0"
 gem "pg", "~> 1.2.3"
-gem "puma", "~> 4.3.5"
+gem "puma", "~> 4.3.9"
 gem "rails", "~> 6.0.3.2"
 
 group :development, :test do
